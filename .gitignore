@@ -17,7 +17,7 @@ output.json
 
 # IntelliJ
 *.iml
-.idea/*
+.idea/
 !.idea/vcs.xml
 misc.xml
 deploymentTargetDropDown.xml
