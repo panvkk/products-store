@@ -14,7 +14,7 @@ object DataComponentHolder {
     fun init() {
         component = DataComponent(object : DataComponent.Dependencies {
             override fun getProductsService(): ProductsService {
-                val mediaType = "application/json; charset=UTF8".toMediaType()
+                val mediaType = "application/json".toMediaType()
                 val json = Json {
                     ignoreUnknownKeys = true
                     encodeDefaults = true

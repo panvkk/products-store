@@ -6,7 +6,7 @@ import com.example.productsStore.domain.repository.ProductsRepository
 class GetProductsUseCase(
     private val repository: ProductsRepository
 ) {
-    suspend operator fun invoke() : List<Product>{
+    suspend operator fun invoke() : List<Product> {
         return repository.getProducts()
     }
 }

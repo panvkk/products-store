@@ -9,6 +9,6 @@ class ProductsRepositoryImpl(
     private val productsService: ProductsService
 ) : ProductsRepository {
     override suspend fun getProducts(): List<Product> {
-        return productsService.getProducts().items.map { it.toDomain() }
+        return productsService.getProducts().productsApi.map { it.toDomain() }
     }
 }
