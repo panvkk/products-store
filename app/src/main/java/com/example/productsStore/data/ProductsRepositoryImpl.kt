@@ -1,6 +1,6 @@
 package com.example.productsStore.data
 
-import com.example.productsStore.data.api.ProductsService
+import com.example.productsStore.data.service.ProductsService
 import com.example.productsStore.data.mapper.toDomain
 import com.example.productsStore.domain.model.Product
 import com.example.productsStore.domain.repository.ProductsRepository

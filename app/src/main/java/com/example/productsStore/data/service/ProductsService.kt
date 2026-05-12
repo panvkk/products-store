@@ -1,4 +1,4 @@
-package com.example.productsStore.data.api
+package com.example.productsStore.data.service
 
 import com.example.productsStore.data.dto.ProductsResponseApi
 import retrofit2.http.GET
