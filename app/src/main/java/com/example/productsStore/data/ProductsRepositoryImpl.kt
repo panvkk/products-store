@@ -14,9 +14,13 @@ import kotlin.coroutines.cancellation.CancellationException
 class ProductsRepositoryImpl @Inject constructor(
     private val productsService: ProductsService
 ) : ProductsRepository {
-    override suspend fun getProducts(fields: String): Resource<List<Product>> {
+    override suspend fun getProducts(
+        skip: Int,
+        limit: Int,
+        fields: String
+    ): Resource<List<Product>> {
         return try {
-            val response = productsService.getProducts(fields).productsApi.map { it.toDomain() }
+            val response = productsService.getProducts(skip, limit, fields).productsApi.map { it.toDomain() }
             Resource.Success(response)
         } catch (e: HttpException) {
             Resource.Error(DomainError.ServerIssue)
@@ -26,6 +30,5 @@ class ProductsRepositoryImpl @Inject constructor(
             if (e is CancellationException) throw e
             Resource.Error(DomainError.Other)
         }
-
     }
 }

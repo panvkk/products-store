@@ -10,7 +10,7 @@ class GetProductsUseCase @Inject constructor(
 ) {
     private val selectedFields = listOf("id", "title", "price", "brand").joinToString(",")
 
-    suspend operator fun invoke() : Resource<List<Product>> {
-        return repository.getProducts(selectedFields)
+    suspend operator fun invoke(skip: Int, limit: Int) : Resource<List<Product>> {
+        return repository.getProducts(skip, limit, selectedFields)
     }
 }
