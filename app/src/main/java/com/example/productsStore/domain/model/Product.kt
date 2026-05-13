@@ -4,5 +4,5 @@ data class Product(
     val id: Int,
     val productTitle: String,
     val price: Float,
-    val brand: String
+    val brand: String?
 )

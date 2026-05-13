@@ -7,5 +7,5 @@ data class ProductApi(
     val id: Int,
     val title: String,
     val price: Float,
-    val brand: String = "No brand" // TODO убрать проблему с локализацией
+    val brand: String? = null
 )

@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">ProductsStore</string>
+    <string name="products_list_top_bar">Products</string>
+    <string name="no_brand">No brand</string>
 </resources>

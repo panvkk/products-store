@@ -20,6 +20,7 @@ fun ProductsStoreTheme(
     MaterialTheme(
         colorScheme = colorScheme,
         shapes = Shapes,
+        typography = AppTypography,
         content = content
     )
 }

@@ -4,5 +4,5 @@ data class ProductUiModel(
     val id: Int,
     val productTitle: String,
     val priceInUSD: Float,
-    val brand: String
+    val brand: String?
 )
