@@ -8,6 +8,7 @@ import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -23,15 +24,12 @@ import androidx.navigation.toRoute
 import com.example.productsStore.presentation.ui.component.ProductsStoreTopBar
 import com.example.productsStore.presentation.ui.screen.ProductDetailsScreen
 import com.example.productsStore.presentation.ui.screen.ProductsListScreen
+import com.example.productsStore.presentation.ui.screen.destination.ProductDetailsDestination
+import com.example.productsStore.presentation.ui.screen.destination.ProductsListDestination
 import com.example.productsStore.presentation.viewmodel.ProductDetailsViewModel
 import com.example.productsStore.presentation.viewmodel.ProductsListViewModel
 import com.example.productsstrore.R
-import kotlinx.serialization.Serializable
 
-@Serializable
-object ProductsList
-@Serializable
-data class ProductDetails(val productId: Int)
 
 @Composable
 fun App(navController: NavHostController) {
@@ -41,13 +39,13 @@ fun App(navController: NavHostController) {
     Scaffold(
         topBar = {
             when {
-                currentDestination?.hasRoute<ProductsList>() ?: false -> {
+                currentDestination?.hasRoute<ProductsListDestination>() ?: false -> {
                     ProductsStoreTopBar(
                         stringResource(R.string.products_list_top_bar),
                         false
                     )
                 }
-                currentDestination?.hasRoute<ProductDetails>() ?: false -> {
+                currentDestination?.hasRoute<ProductDetailsDestination>() ?: false -> {
                     ProductsStoreTopBar(
                         stringResource(R.string.product_details_top_bar),
                         true,
@@ -59,13 +57,13 @@ fun App(navController: NavHostController) {
         }
     ) { innerPadding ->
         NavHost(
-            startDestination = ProductsList,
+            startDestination = ProductsListDestination,
             navController = navController,
             modifier = Modifier
                 .padding(innerPadding)
                 .padding(horizontal = 16.dp)
         ) {
-            composable<ProductsList>(
+            composable<ProductsListDestination>(
                 enterTransition = {
                     slideInHorizontally(initialOffsetX = { -it }, animationSpec = tween(200)) +
                             fadeIn(animationSpec = tween(200))
@@ -76,17 +74,17 @@ fun App(navController: NavHostController) {
                 }
             ) { backStackEntry ->
                 val owner = remember(backStackEntry) {
-                    navController.getBackStackEntry<ProductsList>()
+                    navController.getBackStackEntry<ProductsListDestination>()
                 }
                 val productsListVM = hiltViewModel<ProductsListViewModel>(
                     viewModelStoreOwner = owner
                 )
                 ProductsListScreen(
                     viewModel = productsListVM,
-                    onClickProduct = { id: Int -> navController.navigate(ProductDetails(id)) }
+                    onClickProduct = { id: Int -> navController.navigate(ProductDetailsDestination(id)) }
                 )
             }
-            composable<ProductDetails>(
+            composable<ProductDetailsDestination>(
                 enterTransition = {
                     slideInHorizontally(initialOffsetX = { it }, animationSpec = tween(200)) +
                             fadeIn(animationSpec = tween(200))
@@ -96,14 +94,14 @@ fun App(navController: NavHostController) {
                             fadeOut(animationSpec = tween(200) )
                 }
                 ) { backStackEntry ->
-                val args = backStackEntry.toRoute<ProductDetails>()
+                val args = backStackEntry.toRoute<ProductDetailsDestination>()
                 val owner = remember(backStackEntry) {
-                    navController.getBackStackEntry<ProductDetails>()
+                    navController.getBackStackEntry<ProductDetailsDestination>()
                 }
                 val productDetailsVM = hiltViewModel<ProductDetailsViewModel>(
                     viewModelStoreOwner = owner
                 )
-                productDetailsVM.setProduct(args.productId)
+                LaunchedEffect(args) { productDetailsVM.setProduct(args.productId) }
 
                 ProductDetailsScreen(viewModel = productDetailsVM)
             }
