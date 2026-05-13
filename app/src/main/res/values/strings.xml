@@ -2,4 +2,10 @@
     <string name="app_name">ProductsStore</string>
     <string name="products_list_top_bar">Products</string>
     <string name="no_brand">No brand</string>
+    <string name="loading_title">Loading...</string>
+    <string name="error_title">Error occurred.</string>
+    <string name="retry_loading">Retry</string>
+    <string name="check_your_internet_connection">Check your internet connection.</string>
+    <string name="please_try_again_later">Please try again later.</string>
+    <string name="unknown_error">Unknown error.</string>
 </resources>
