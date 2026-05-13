@@ -8,7 +8,7 @@ import com.example.productsStore.domain.repository.ProductsRepository
 class ProductsRepositoryImpl(
     private val productsService: ProductsService
 ) : ProductsRepository {
-    override suspend fun getProducts(): List<Product> {
-        return productsService.getProducts().productsApi.map { it.toDomain() }
+    override suspend fun getProducts(fields: String): List<Product> {
+        return productsService.getProducts(fields).productsApi.map { it.toDomain() }
     }
 }

@@ -6,7 +6,9 @@ import com.example.productsStore.domain.repository.ProductsRepository
 class GetProductsUseCase(
     private val repository: ProductsRepository
 ) {
+    private val selectedFields = listOf("id", "title", "price", "brand").joinToString(",")
+
     suspend operator fun invoke() : List<Product> {
-        return repository.getProducts()
+        return repository.getProducts(selectedFields)
     }
 }
