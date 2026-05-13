@@ -1,5 +1,6 @@
 package com.example.productsStore.presentation.ui.screen
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -26,6 +27,7 @@ import com.example.productsstrore.R
 @Composable
 fun ProductsListScreen(
     modifier: Modifier = Modifier,
+    onClickProduct: (id: Int) -> Unit,
     viewModel: ProductsListViewModel
 ) {
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
@@ -51,6 +53,7 @@ fun ProductsListScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 8.dp)
+                        .clickable { onClickProduct(product.id) }
                 )
                 if(index + itemsCountBeforeFetch == state.products.size - 1
                     && state.error == null) {

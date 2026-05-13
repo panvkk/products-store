@@ -8,4 +8,8 @@
     <string name="check_your_internet_connection">Check your internet connection.</string>
     <string name="please_try_again_later">Please try again later.</string>
     <string name="unknown_error">Unknown error.</string>
+    <string name="description_title">Description</string>
+    <string name="gramm">g</string>
+    <string name="weight_title">Weight</string>
+    <string name="warranty_title">Warranty</string>
 </resources>

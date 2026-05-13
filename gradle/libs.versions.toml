@@ -9,6 +9,7 @@ constraintlayout = "2.2.1"
 activityCompose = "1.11.0"
 composeBom = "2025.10.00"
 kotlinxSerializationJson = "1.6.3"
+navigationCompose = "2.9.8"
 okhttp = "4.12.0"
 retrofit = "2.11.0"
 lifecycleViewmodelCompose = "2.10.0"
@@ -18,8 +19,10 @@ ksp = "2.3.7"
 
 
 [libraries]
+androidx-compose-material-icons-core = { module = "androidx.compose.material:material-icons-core" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
@@ -39,7 +42,6 @@ retrofit-converter-kotlinx-serialization = { group = "com.squareup.retrofit2", n
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hilt-compose"}
-
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

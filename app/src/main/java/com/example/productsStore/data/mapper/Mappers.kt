@@ -1,6 +1,10 @@
 package com.example.productsStore.data.mapper
 
 import com.example.productsStore.data.dto.ProductApi
+import com.example.productsStore.data.dto.ProductDetailsApi
 import com.example.productsStore.domain.model.Product
+import com.example.productsStore.domain.model.ProductDetails
 
 fun ProductApi.toDomain() = Product(id, title, price, brand)
+
+fun ProductDetailsApi.toDomain() = ProductDetails(title, description, rating, price, weight, availabilityStatus, warrantyInformation)

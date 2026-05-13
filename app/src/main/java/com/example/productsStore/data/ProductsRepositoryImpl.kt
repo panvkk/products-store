@@ -5,6 +5,7 @@ import com.example.productsStore.core.domain.DomainError
 import com.example.productsStore.data.service.ProductsService
 import com.example.productsStore.data.mapper.toDomain
 import com.example.productsStore.domain.model.Product
+import com.example.productsStore.domain.model.ProductDetails
 import com.example.productsStore.domain.repository.ProductsRepository
 import retrofit2.HttpException
 import java.io.IOException
@@ -30,5 +31,9 @@ class ProductsRepositoryImpl @Inject constructor(
             if (e is CancellationException) throw e
             Resource.Error(DomainError.Other)
         }
+    }
+
+    override suspend fun getProductDetails(id: Int, fields: String): ProductDetails {
+        return productsService.getProductDetails(id, fields).toDomain()
     }
 }
