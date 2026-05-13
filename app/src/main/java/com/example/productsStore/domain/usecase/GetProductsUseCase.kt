@@ -2,8 +2,9 @@ package com.example.productsStore.domain.usecase
 
 import com.example.productsStore.domain.model.Product
 import com.example.productsStore.domain.repository.ProductsRepository
+import javax.inject.Inject
 
-class GetProductsUseCase(
+class GetProductsUseCase @Inject constructor(
     private val repository: ProductsRepository
 ) {
     private val selectedFields = listOf("id", "title", "price", "brand").joinToString(",")

@@ -10,8 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.productsStore.presentation.di.PresentationComponentHolder
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.productsStore.presentation.ui.screen.ProductsListScreen
 import com.example.productsStore.presentation.viewmodel.ProductsListViewModel
 import com.example.productsstrore.R
@@ -19,10 +18,7 @@ import com.example.productsstrore.R
 @Composable
 fun App() {
     // Пока один экран оставлю просто так
-    val subcomponent = PresentationComponentHolder.component.createProductsListSubcomponent()
-    val viewModel: ProductsListViewModel = viewModel(
-        factory = subcomponent.createProductsListViewModelFactory()
-    )
+    val viewModel: ProductsListViewModel = hiltViewModel()
 
     Scaffold(
         topBar = {

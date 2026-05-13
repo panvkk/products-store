@@ -5,11 +5,14 @@ import androidx.lifecycle.viewModelScope
 import com.example.productsStore.domain.usecase.GetProductsUseCase
 import com.example.productsStore.presentation.mapper.toUiModel
 import com.example.productsStore.presentation.model.ProductsListUiState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ProductsListViewModel(
+@HiltViewModel
+class ProductsListViewModel @Inject constructor(
     private val getProductsUseCase: GetProductsUseCase
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<ProductsListUiState>(ProductsListUiState.Loading)
