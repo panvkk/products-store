@@ -10,8 +10,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -25,31 +23,21 @@ class ProductsListViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(generateInitialState())
     val uiState = _uiState.asStateFlow()
 
-    private val _pageSize = MutableStateFlow<Int?>(null)
-    val indexWhenFetchNextPage =
-        combine(
-            _pageSize,
-            _uiState.map { it.products }.distinctUntilChanged()
-        ) { pageSize, products ->
-            val productsCount = products.size
-            productsCount - (pageSize?.div(4) ?: 0) - 1
-        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), 0)
+    private val _pageSize = MutableStateFlow(0)
+    val itemsCountBeforeFetch = _pageSize
+        .map { it / 4 }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), 0)
 
-
-    init { fetchProducts() }
-
-    fun fetchProducts() {
-        _uiState.update { ProductsListUiState.Loading }
+    init {
         viewModelScope.launch {
             _pageSize.collect { pageSize ->
-                pageSize?.let {
+                if(pageSize != 0) {
                     fetchNextPage()
                     return@collect
                 }
             }
         }
     }
-
     fun fetchNextPage() {
         val currentState = _uiState.value
         if(currentState.isLoadingGoing || currentState.isLastPageReached) return
@@ -57,20 +45,35 @@ class ProductsListViewModel @Inject constructor(
         _uiState.update { it.copy(isLoadingGoing = true) }
         viewModelScope.launch {
             val skip = currentState.products.size
-            val limit = _pageSize.value!!
-            val newProducts = getProductsUseCase.invoke(skip = skip, limit = limit)
-                .map { it.toUiModel() }
+            val limit = _pageSize.value
+
+            val result = getProductsUseCase.invoke(skip = skip, limit = limit)
 
             _uiState.update { state ->
-                state.copy(
-                    products = state.products + newProducts,
-                    isLoadingGoing = false,
-                    isLastPageReached = newProducts.size < limit
-                )
+                when(result) {
+                    is Resource.Success -> {
+                        val newProducts = result.data.map { it.toUiModel() }
+                        state.copy(
+                            products = state.products + newProducts,
+                            isLoadingGoing = false,
+                            isLastPageReached = newProducts.size < limit,
+                            error = null
+                        )
+                    }
+                    is Resource.Error -> {
+                        state.copy(
+                            isLoadingGoing = false,
+                            error = result.error
+                        )
+                    }
+                }
             }
         }
     }
-    fun setupPageSize(pageSize: Int) { _pageSize.update { pageSize } }
+
+    fun setupPageSize(pageSize: Int) {
+        _pageSize.update { pageSize }
+    }
 
     private fun generateInitialState() : ProductsListUiState {
         return ProductsListUiState(
