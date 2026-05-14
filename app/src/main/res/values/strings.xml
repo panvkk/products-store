@@ -13,4 +13,5 @@
     <string name="weight_title">Weight</string>
     <string name="warranty_title">Warranty</string>
     <string name="product_details_top_bar">Details</string>
+    <string name="default_top_bar">Products Store</string>
 </resources>

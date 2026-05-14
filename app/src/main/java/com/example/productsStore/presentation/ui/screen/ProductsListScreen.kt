@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -20,6 +19,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.productsStore.core.domain.DomainError
+import com.example.productsStore.presentation.ui.component.ErrorPage
 import com.example.productsStore.presentation.ui.component.ProductCard
 import com.example.productsStore.presentation.viewmodel.ProductsListViewModel
 import com.example.productsstrore.R
@@ -69,10 +69,7 @@ fun ProductsListScreen(
                         is DomainError.ServerIssue -> stringResource(R.string.please_try_again_later)
                         else -> stringResource(R.string.unknown_error)
                     }
-                    Text(stringResource(R.string.error_title) + "\n" + errorMessage)
-                    Button(onClick = { viewModel.fetchNextPage() }) {
-                        Text(stringResource(R.string.retry_loading))
-                    }
+                    ErrorPage(errorMessage, { viewModel.fetchNextPage() })
                 }
             }
         }

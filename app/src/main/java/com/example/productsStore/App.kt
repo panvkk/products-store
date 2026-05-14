@@ -52,7 +52,12 @@ fun App(navController: NavHostController) {
                         { navController.popBackStack() }
                     )
                 }
-                else -> {  }
+                else -> {
+                    ProductsStoreTopBar(
+                        stringResource(R.string.default_top_bar),
+                        false
+                    )
+                }
             }
         }
     ) { innerPadding ->
@@ -72,13 +77,9 @@ fun App(navController: NavHostController) {
                     slideOutHorizontally(targetOffsetX = { -it }, animationSpec = tween(200)) +
                             fadeOut(animationSpec = tween(200) )
                 }
-            ) { backStackEntry ->
-                val owner = remember(backStackEntry) {
-                    navController.getBackStackEntry<ProductsListDestination>()
-                }
-                val productsListVM = hiltViewModel<ProductsListViewModel>(
-                    viewModelStoreOwner = owner
-                )
+            ) {
+                val productsListVM = hiltViewModel<ProductsListViewModel>()
+
                 ProductsListScreen(
                     viewModel = productsListVM,
                     onClickProduct = { id: Int -> navController.navigate(ProductDetailsDestination(id)) }
@@ -95,13 +96,9 @@ fun App(navController: NavHostController) {
                 }
                 ) { backStackEntry ->
                 val args = backStackEntry.toRoute<ProductDetailsDestination>()
-                val owner = remember(backStackEntry) {
-                    navController.getBackStackEntry<ProductDetailsDestination>()
-                }
-                val productDetailsVM = hiltViewModel<ProductDetailsViewModel>(
-                    viewModelStoreOwner = owner
-                )
-                LaunchedEffect(args) { productDetailsVM.setProduct(args.productId) }
+                val productDetailsVM = hiltViewModel<ProductDetailsViewModel>()
+
+                LaunchedEffect(args) { productDetailsVM.setProductId(args.productId) }
 
                 ProductDetailsScreen(viewModel = productDetailsVM)
             }

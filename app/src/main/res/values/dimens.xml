@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="product_card_height">100dp</dimen>
+    <dimen name="retry_button_width">152dp</dimen>
+    <dimen name="retry_button_height">48dp</dimen>
 </resources>

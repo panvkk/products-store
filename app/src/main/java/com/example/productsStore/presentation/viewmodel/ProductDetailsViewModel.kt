@@ -2,9 +2,10 @@ package com.example.productsStore.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.productsStore.core.Resource
 import com.example.productsStore.domain.usecase.GetProductDetailsUseCase
 import com.example.productsStore.presentation.mapper.toUiModel
-import com.example.productsStore.presentation.model.ProductDetailsUiModel
+import com.example.productsStore.presentation.model.ProductDetailsUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,17 +17,34 @@ import javax.inject.Inject
 class ProductDetailsViewModel @Inject constructor(
     private val getProductDetailsUseCase: GetProductDetailsUseCase
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow<ProductDetailsUiModel>(ProductDetailsUiModel.Loading)
+    private val _uiState = MutableStateFlow<ProductDetailsUiState>(ProductDetailsUiState.Loading)
     val uiState = _uiState.asStateFlow()
 
-    fun setProduct(id: Int) {
+    private val _productId = MutableStateFlow<Int?>(null)
+
+    init {
         viewModelScope.launch {
-            val newState = fetchProductDetails(id)
-            _uiState.update { newState }
+            _productId.collect { id -> id?.let { fetchProductDetails(); return@collect } }
         }
     }
 
-    private suspend fun fetchProductDetails(id: Int) : ProductDetailsUiModel {
-        return getProductDetailsUseCase.invoke(id).toUiModel()
+    fun setProductId(id: Int) { _productId.update { id } }
+
+    fun fetchProductDetails() {
+        val productId: Int = _productId.value ?: return
+
+        viewModelScope.launch {
+            val result = getProductDetailsUseCase.invoke(productId)
+            val newState = when (result) {
+                is Resource.Success -> {
+                    ProductDetailsUiState.Content(result.data.toUiModel())
+                }
+
+                is Resource.Error -> {
+                    ProductDetailsUiState.Error(result.error)
+                }
+            }
+            _uiState.update { newState }
+        }
     }
 }

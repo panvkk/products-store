@@ -33,7 +33,17 @@ class ProductsRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getProductDetails(id: Int, fields: String): ProductDetails {
-        return productsService.getProductDetails(id, fields).toDomain()
+    override suspend fun getProductDetails(id: Int, fields: String): Resource<ProductDetails> {
+        return try {
+            val response = productsService.getProductDetails(id, fields).toDomain()
+            Resource.Success(response)
+        } catch (e: HttpException) {
+            Resource.Error(DomainError.ServerIssue)
+        } catch (e: IOException) {
+            Resource.Error(DomainError.NetworkIssue)
+        } catch (e: Exception) {
+            if (e is CancellationException) throw e
+            Resource.Error(DomainError.Other)
+        }
     }
 }
