@@ -10,11 +10,11 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.productsStore.core.domain.DomainError
 import com.example.productsStore.presentation.model.ProductsListUiState
 import com.example.productsStore.presentation.ui.component.ProductCard
@@ -26,7 +26,7 @@ fun ProductsListScreen(
     modifier: Modifier = Modifier,
     viewModel: ProductsListViewModel
 ) {
-    val state = viewModel.uiState.collectAsState().value
+    val state = viewModel.uiState.collectAsStateWithLifecycle().value
 
     Column(modifier = modifier) {
         when(state) {
