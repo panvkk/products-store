@@ -13,13 +13,19 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material3.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import com.example.productsStore.core.domain.DomainError
 import com.example.productsStore.presentation.model.ProductDetailsUiState
 import com.example.productsStore.presentation.ui.component.ErrorPage
@@ -41,7 +47,7 @@ fun ProductDetailsScreen(
         modifier = modifier
             .fillMaxSize()
             .verticalScroll(scrollState),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.large_padding))
     ) {
         when(state) {
             is ProductDetailsUiState.Content -> {
@@ -59,28 +65,28 @@ fun ProductDetailsScreen(
                         text = "$${state.productDetails.priceInUSD}",
                         style = MaterialTheme.typography.headlineSmall,
                         color = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.padding(start = 8.dp)
+                        modifier = Modifier.padding(start = dimensionResource(R.dimen.small_padding))
                     )
                 }
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.medium_padding))
                 ) {
                     Surface(
                         shape = MaterialTheme.shapes.small,
                         color = MaterialTheme.colorScheme.secondaryContainer
                     ) {
                         Row(
-                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                            modifier = Modifier.padding(horizontal = dimensionResource(R.dimen.small_padding), vertical = dimensionResource(R.dimen.extra_small_padding)),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Star,
                                 contentDescription = null,
-                                modifier = Modifier.size(16.dp),
+                                modifier = Modifier.size(dimensionResource(R.dimen.large_padding)),
                                 tint = RatingStarColor
                             )
-                            Spacer(Modifier.width(4.dp))
+                            Spacer(Modifier.width(dimensionResource(R.dimen.extra_small_padding)))
                             Text(
                                 text = state.productDetails.rating.toString(),
                                 style = MaterialTheme.typography.labelLarge
@@ -96,9 +102,12 @@ fun ProductDetailsScreen(
                     )
                 }
 
-                HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
+                HorizontalDivider(
+                    thickness = dimensionResource(R.dimen.divider_thickness),
+                    color = MaterialTheme.colorScheme.outlineVariant
+                )
 
-                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Column(verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.small_padding))) {
                     Text(
                         text = stringResource(R.string.description_title),
                         style = MaterialTheme.typography.labelMedium,
@@ -113,8 +122,8 @@ fun ProductDetailsScreen(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Column(
-                        modifier = Modifier.padding(12.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                        modifier = Modifier.padding(dimensionResource(R.dimen.medium_padding)),
+                        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.small_padding))
                     ) {
                         ProductInfoRow(label = stringResource(R.string.weight_title), value = "${state.productDetails.weight}" + stringResource(R.string.gramm))
                         ProductInfoRow(label = stringResource(R.string.warranty_title), value = state.productDetails.warrantyInformation)

@@ -52,7 +52,7 @@ fun ProductsListScreen(
                     product = product,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 8.dp)
+                        .padding(vertical = dimensionResource(R.dimen.small_padding))
                         .clickable { onClickProduct(product.id) }
                 )
                 if(index + itemsCountBeforeFetch == state.products.size - 1

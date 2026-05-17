@@ -17,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import com.example.productsStore.presentation.model.ProductUiModel
 import com.example.productsstrore.R
 
@@ -41,7 +40,7 @@ fun ProductCard(
                 modifier = Modifier
                     .weight(3f)
                     .fillMaxHeight()
-                    .padding(start = 8.dp)
+                    .padding(start = dimensionResource(R.dimen.small_padding))
             ) {
                 Text(
                     text = product.productTitle,

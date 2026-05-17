@@ -12,7 +12,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.dimensionResource
+import com.example.productsstrore.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -36,11 +37,11 @@ fun ProductsStoreTopBar(
                     tint = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier
                         .clickable { navigateUp() }
-                        .padding(end = 8.dp)
-                        .size(32.dp)
+                        .padding(end = dimensionResource(R.dimen.small_padding))
+                        .size(dimensionResource(R.dimen.default_icon_size))
                 )
             }
         },
-        modifier = Modifier.padding(horizontal = 8.dp)
+        modifier = Modifier.padding(horizontal = dimensionResource(R.dimen.small_padding))
     )
 }
