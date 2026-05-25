@@ -1,6 +1,6 @@
 package com.example.productsStore.data.di
 
-import com.example.productsStore.data.service.ProductsService
+import com.example.productsStore.data.remote.service.ProductsService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

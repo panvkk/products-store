@@ -1,4 +1,4 @@
-package com.example.productsStore.data.service
+package com.example.productsStore.data.remote.service
 
 import com.example.productsStore.data.dto.ProductDetailsApi
 import com.example.productsStore.data.dto.ProductsResponseApi

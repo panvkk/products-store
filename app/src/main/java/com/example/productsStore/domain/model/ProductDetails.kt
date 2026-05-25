@@ -7,5 +7,6 @@ data class ProductDetails(
     val price: Float,
     val weight: Int,
     val availabilityStatus: String,
-    val warrantyInformation: String
+    val warrantyInformation: String,
+    val isIrrelevantInfo: Boolean = false
 )

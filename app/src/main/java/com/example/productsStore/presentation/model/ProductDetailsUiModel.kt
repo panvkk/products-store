@@ -7,5 +7,6 @@ data class ProductDetailsUiModel(
     val priceInUSD: Float,
     val weight: Int,
     val availabilityStatus: String,
-    val warrantyInformation: String
+    val warrantyInformation: String,
+    val isExpiredInfo: Boolean
 )

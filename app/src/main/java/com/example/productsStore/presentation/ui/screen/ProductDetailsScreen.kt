@@ -125,9 +125,12 @@ fun ProductDetailsScreen(
                         modifier = Modifier.padding(dimensionResource(R.dimen.medium_padding)),
                         verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.small_padding))
                     ) {
-                        ProductInfoRow(label = stringResource(R.string.weight_title), value = "${state.productDetails.weight}" + stringResource(R.string.gramm))
+                        ProductInfoRow(label = stringResource(R.string.weight_title), value = "${state.productDetails.weight}" + stringResource(R.string.gram))
                         ProductInfoRow(label = stringResource(R.string.warranty_title), value = state.productDetails.warrantyInformation)
                     }
+                }
+                if(state.productDetails.isExpiredInfo) {
+                    ErrorPage(stringResource(R.string.expired_information), { viewModel.fetchProductDetails() })
                 }
             }
             is ProductDetailsUiState.Error -> {

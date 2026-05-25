@@ -8,4 +8,4 @@ import com.example.productsStore.presentation.model.ProductUiModel
 
 fun Product.toUiModel() = ProductUiModel(id, productTitle, price, brand)
 
-fun ProductDetails.toUiModel() = ProductDetailsUiModel(title, description, rating, price, weight, availabilityStatus, warrantyInformation)
+fun ProductDetails.toUiModel() = ProductDetailsUiModel(title, description, rating, price, weight, availabilityStatus, warrantyInformation, isIrrelevantInfo)
