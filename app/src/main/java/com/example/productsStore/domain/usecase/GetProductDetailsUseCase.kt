@@ -8,7 +8,7 @@ import javax.inject.Inject
 class GetProductDetailsUseCase @Inject constructor(
     private val repository: ProductsRepository
 ) {
-    private val selectedFields = listOf("title", "description", "rating", "price", "weight", "availabilityStatus", "warrantyInformation").joinToString(",")
+    private val selectedFields = listOf("title", "description", "images", "rating", "price", "weight", "availabilityStatus", "warrantyInformation").joinToString(",")
 
     suspend operator fun invoke(id: Int) : Resource<ProductDetails> {
         return repository.getProductDetails(id, selectedFields)

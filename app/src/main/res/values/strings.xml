@@ -15,4 +15,5 @@
     <string name="product_details_top_bar">Details</string>
     <string name="default_top_bar">Products Store</string>
     <string name="expired_information">This information is out of date. Check your internet connection or try again later.</string>
+    <string name="product_image_content_description">Product image</string>
 </resources>

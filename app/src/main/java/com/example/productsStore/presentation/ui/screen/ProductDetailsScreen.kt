@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -25,7 +26,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
+import com.bumptech.glide.integration.compose.placeholder
 import com.example.productsStore.core.domain.DomainError
 import com.example.productsStore.presentation.model.ProductDetailsUiState
 import com.example.productsStore.presentation.ui.component.ErrorPage
@@ -35,6 +40,7 @@ import com.example.productsStore.presentation.ui.theme.RatingStarColor
 import com.example.productsStore.presentation.viewmodel.ProductDetailsViewModel
 import com.example.productsstrore.R
 
+@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun ProductDetailsScreen(
     viewModel: ProductDetailsViewModel,
@@ -51,6 +57,15 @@ fun ProductDetailsScreen(
     ) {
         when(state) {
             is ProductDetailsUiState.Content -> {
+                GlideImage(
+                    model = state.productDetails.mainImageUri,
+                    loading = placeholder(painterResource(R.drawable.loading_image)),
+                    failure = placeholder(painterResource(R.drawable.no_image_available)),
+                    contentDescription = stringResource(R.string.product_image_content_description),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(dimensionResource(R.dimen.product_image_height))
+                )
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,

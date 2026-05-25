@@ -21,7 +21,9 @@ object DatabaseModule {
         context = appContext,
         klass = ProductsStoreDatabase::class.java,
         name = "product-details-db.db"
-    ).build()
+    )
+        .addMigrations(ProductsStoreDatabase.MIGRATION_1_2)
+        .build()
 
     @Provides
     fun provideProductDetailsCacheDao(db: ProductsStoreDatabase) = db.productDetailsCacheDao()

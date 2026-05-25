@@ -10,6 +10,7 @@ data class ProductDetailsEntity(
     @PrimaryKey(false) val id: Int,
     val title: String,
     val description: String,
+    @ColumnInfo("image_url") val imageUrl: String?,
     val rating: Float,
     val price: Float,
     val weight: Int,
