@@ -16,4 +16,5 @@
     <string name="default_top_bar">Products Store</string>
     <string name="expired_information">This information is out of date. Check your internet connection or try again later.</string>
     <string name="product_image_content_description">Product image</string>
+    <string name="add_to_shopping_cart_content_decription">Add to shopping cart</string>
 </resources>

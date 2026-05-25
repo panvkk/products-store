@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.productsStore.core.Resource
 import com.example.productsStore.domain.usecase.GetProductsUseCase
 import com.example.productsStore.presentation.mapper.toUiModel
+import com.example.productsStore.presentation.model.ProductUiModel
 import com.example.productsStore.presentation.model.ProductsListUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -73,6 +74,10 @@ class ProductsListViewModel @Inject constructor(
 
     fun setupPageSize(pageSize: Int) {
         _pageSize.update { pageSize }
+    }
+
+    fun addToCart(id: Int) {
+
     }
 
     private fun generateInitialState() : ProductsListUiState {

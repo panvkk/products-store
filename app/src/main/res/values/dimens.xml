@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 <!-- Measurements(размеры короче) -->
-    <dimen name="product_card_height">100dp</dimen>
+    <dimen name="product_card_height">120dp</dimen>
     <dimen name="retry_button_width">152dp</dimen>
     <dimen name="retry_button_height">48dp</dimen>
     <dimen name="divider_thickness">0.5dp</dimen>
     <dimen name="default_icon_size">32dp</dimen>
+    <dimen name="default_icon_container_size">52dp</dimen>
+    <dimen name="default_border_width">1dp</dimen>
     <dimen name="product_image_height">256dp</dimen>
 <!-- Paddings -->
     <dimen name="extra_small_padding">4dp</dimen>

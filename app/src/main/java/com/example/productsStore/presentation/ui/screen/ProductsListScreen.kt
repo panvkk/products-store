@@ -19,6 +19,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.productsStore.core.domain.DomainError
+import com.example.productsStore.presentation.model.ProductUiModel
 import com.example.productsStore.presentation.ui.component.ErrorPage
 import com.example.productsStore.presentation.ui.component.ProductCard
 import com.example.productsStore.presentation.viewmodel.ProductsListViewModel
@@ -50,6 +51,7 @@ fun ProductsListScreen(
             itemsIndexed(state.products) { index, product ->
                 ProductCard(
                     product = product,
+                    onAddToCart = { viewModel.addToCart(product.id) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = dimensionResource(R.dimen.small_padding))
