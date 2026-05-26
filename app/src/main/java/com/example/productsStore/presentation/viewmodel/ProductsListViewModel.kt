@@ -3,11 +3,13 @@ package com.example.productsStore.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.productsStore.core.Resource
+import com.example.productsStore.core.di.ApplicationScope
+import com.example.productsStore.domain.usecase.AddToCartUseCase
 import com.example.productsStore.domain.usecase.GetProductsUseCase
 import com.example.productsStore.presentation.mapper.toUiModel
-import com.example.productsStore.presentation.model.ProductUiModel
 import com.example.productsStore.presentation.model.ProductsListUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,7 +21,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProductsListViewModel @Inject constructor(
-    private val getProductsUseCase: GetProductsUseCase
+    private val getProductsUseCase: GetProductsUseCase,
+    private val addToCartUseCase: AddToCartUseCase,
+    @ApplicationScope private val applicationScope: CoroutineScope
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(generateInitialState())
     val uiState = _uiState.asStateFlow()
@@ -77,7 +81,9 @@ class ProductsListViewModel @Inject constructor(
     }
 
     fun addToCart(id: Int) {
-
+        applicationScope.launch {
+            addToCartUseCase(id)
+        }
     }
 
     private fun generateInitialState() : ProductsListUiState {

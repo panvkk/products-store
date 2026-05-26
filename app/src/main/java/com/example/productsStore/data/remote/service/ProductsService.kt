@@ -1,5 +1,6 @@
 package com.example.productsStore.data.remote.service
 
+import com.example.productsStore.data.dto.ProductApi
 import com.example.productsStore.data.dto.ProductDetailsApi
 import com.example.productsStore.data.dto.ProductsResponseApi
 import retrofit2.http.GET
@@ -20,7 +21,11 @@ interface ProductsService {
         @Query("select") fields: String
     ) : ProductDetailsApi
 
-
+    @GET("/products/{id}")
+    suspend fun getProductById(
+        @Path("id") id: Int,
+        @Query("select") fields: String
+    ) : ProductApi?
     companion object {
         const val BASE_URL = "https://dummyjson.com/"
     }

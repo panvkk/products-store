@@ -7,4 +7,5 @@ import com.example.productsStore.domain.model.ProductDetails
 interface ProductsRepository {
     suspend fun getProducts(skip: Int, limit: Int, fields: String) : Resource<List<Product>>
     suspend fun getProductDetails(id: Int, fields: String) : Resource<ProductDetails>
+    suspend fun getProductById(id: Int, fields: String) : Resource<Product>
 }

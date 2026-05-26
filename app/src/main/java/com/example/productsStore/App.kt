@@ -22,10 +22,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.toRoute
 import com.example.productsStore.presentation.ui.component.ProductsStoreTopBar
+import com.example.productsStore.presentation.ui.screen.CartScreen
 import com.example.productsStore.presentation.ui.screen.ProductDetailsScreen
 import com.example.productsStore.presentation.ui.screen.ProductsListScreen
+import com.example.productsStore.presentation.ui.screen.destination.CartDestination
 import com.example.productsStore.presentation.ui.screen.destination.ProductDetailsDestination
 import com.example.productsStore.presentation.ui.screen.destination.ProductsListDestination
+import com.example.productsStore.presentation.viewmodel.CartViewModel
 import com.example.productsStore.presentation.viewmodel.ProductDetailsViewModel
 import com.example.productsStore.presentation.viewmodel.ProductsListViewModel
 import com.example.productsstrore.R
@@ -41,21 +44,35 @@ fun App(navController: NavHostController) {
             when {
                 currentDestination?.hasRoute<ProductsListDestination>() ?: false -> {
                     ProductsStoreTopBar(
-                        stringResource(R.string.products_list_top_bar),
-                        false
+                        title = stringResource(R.string.products_list_top_bar),
+                        canNavigateUp = false,
+                        canNavigateToCart = true,
+                        navigateToCart = { navController.navigate(CartDestination) }
                     )
                 }
                 currentDestination?.hasRoute<ProductDetailsDestination>() ?: false -> {
                     ProductsStoreTopBar(
-                        stringResource(R.string.product_details_top_bar),
-                        true,
-                        { navController.popBackStack() }
+                        title = stringResource(R.string.product_details_top_bar),
+                        canNavigateUp = true,
+                        canNavigateToCart = true,
+                        navigateUp = { navController.popBackStack() },
+                        navigateToCart = { navController.navigate(CartDestination) }
+                    )
+                }
+                currentDestination?.hasRoute<CartDestination>() ?: false -> {
+                    ProductsStoreTopBar(
+                        title = stringResource(R.string.cart_top_bar),
+                        canNavigateUp = true,
+                        canNavigateToCart = false,
+                        navigateUp = { navController.navigate(ProductsListDestination) }
                     )
                 }
                 else -> {
                     ProductsStoreTopBar(
-                        stringResource(R.string.default_top_bar),
-                        false
+                        title = stringResource(R.string.default_top_bar),
+                        canNavigateUp = false,
+                        canNavigateToCart = true,
+                        navigateToCart = { navController.navigate(CartDestination) }
                     )
                 }
             }
@@ -94,13 +111,32 @@ fun App(navController: NavHostController) {
                     slideOutHorizontally(targetOffsetX = { it }, animationSpec = tween(200)) +
                             fadeOut(animationSpec = tween(200) )
                 }
-                ) { backStackEntry ->
+            ) { backStackEntry ->
                 val args = backStackEntry.toRoute<ProductDetailsDestination>()
                 val productDetailsVM = hiltViewModel<ProductDetailsViewModel>()
 
                 LaunchedEffect(args) { productDetailsVM.setProductId(args.productId) }
 
                 ProductDetailsScreen(viewModel = productDetailsVM)
+            }
+            composable<CartDestination>(
+                enterTransition = {
+                    slideInHorizontally(initialOffsetX = { it }, animationSpec = tween(200)) +
+                            fadeIn(animationSpec = tween(200))
+                },
+                exitTransition = {
+                    slideOutHorizontally(targetOffsetX = { it }, animationSpec = tween(200)) +
+                            fadeOut(animationSpec = tween(200) )
+                }
+            ) {
+                val cartViewModel = hiltViewModel<CartViewModel>()
+
+                CartScreen(
+                    onClickProduct = { id: Int ->
+                        navController.navigate(ProductDetailsDestination(id))
+                    },
+                    viewModel = cartViewModel
+                )
             }
         }
     }

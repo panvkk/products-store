@@ -1,6 +1,6 @@
 package com.example.productsStore.presentation.ui.component
 
-import androidx.compose.foundation.border
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,7 +19,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -31,7 +30,8 @@ import com.example.productsstrore.R
 fun ProductCard(
     product: ProductUiModel,
     modifier: Modifier = Modifier,
-    onAddToCart: () -> Unit
+    canBeAddedToCart: Boolean = true,
+    onAddToCart: () -> Unit = {  }
 ) {
     Card(
         modifier = modifier.height(dimensionResource(R.dimen.product_card_height)),
@@ -63,7 +63,7 @@ fun ProductCard(
             }
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.SpaceBetween,
+                verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.large_padding)),
                 modifier = Modifier
                     .weight(4f)
                     .padding(dimensionResource(R.dimen.small_padding))
@@ -72,19 +72,21 @@ fun ProductCard(
                     text = "$${product.priceInUSD}",
                     style = MaterialTheme.typography.bodyLarge,
                 )
-                IconButton(
-                    onClick = { onAddToCart() },
-                    modifier = Modifier
-                        .size(dimensionResource(R.dimen.default_icon_container_size))
-                        .clip(MaterialTheme.shapes.small)
-                        .border(dimensionResource(R.dimen.default_border_width), Color.Gray, MaterialTheme.shapes.small)
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.add_shopping_cart),
-                        contentDescription = stringResource(R.string.add_to_shopping_cart_content_decription),
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(dimensionResource(R.dimen.default_icon_size))
-                    )
+                if(canBeAddedToCart) {
+                    IconButton(
+                        onClick = { onAddToCart() },
+                        modifier = Modifier
+                            .size(dimensionResource(R.dimen.default_icon_container_size))
+                            .clip(MaterialTheme.shapes.small)
+                            .background(MaterialTheme.colorScheme.primary)
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.add_shopping_cart),
+                            contentDescription = stringResource(R.string.add_to_shopping_cart_content_decription),
+                            tint = MaterialTheme.colorScheme.background,
+                            modifier = Modifier.size(dimensionResource(R.dimen.default_icon_size))
+                        )
+                    }
                 }
             }
         }

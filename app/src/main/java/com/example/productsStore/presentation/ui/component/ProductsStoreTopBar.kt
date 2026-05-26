@@ -13,6 +13,8 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import com.example.productsstrore.R
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -20,7 +22,9 @@ import com.example.productsstrore.R
 fun ProductsStoreTopBar(
     title: String,
     canNavigateUp: Boolean,
-    navigateUp: () -> Unit = {  }
+    canNavigateToCart: Boolean,
+    navigateUp: () -> Unit = {  },
+    navigateToCart: () -> Unit = {  }
 ) {
     TopAppBar(
         title = {
@@ -33,10 +37,23 @@ fun ProductsStoreTopBar(
             if(canNavigateUp) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = null,
+                    contentDescription = stringResource(R.string.navigate_back_content_description),
                     tint = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier
                         .clickable { navigateUp() }
+                        .padding(end = dimensionResource(R.dimen.small_padding))
+                        .size(dimensionResource(R.dimen.default_icon_size))
+                )
+            }
+        },
+        actions = {
+            if(canNavigateToCart) {
+                Icon(
+                    painter = painterResource(R.drawable.shopping_cart),
+                    contentDescription = stringResource(R.string.navigate_to_cart_content_description),
+                    tint = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier
+                        .clickable { navigateToCart() }
                         .padding(end = dimensionResource(R.dimen.small_padding))
                         .size(dimensionResource(R.dimen.default_icon_size))
                 )

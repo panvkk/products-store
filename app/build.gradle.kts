@@ -7,6 +7,10 @@ plugins {
     alias(libs.plugins.hilt.android)
 }
 
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
+}
+
 android {
     namespace = "com.example.productsstrore"
     compileSdk {

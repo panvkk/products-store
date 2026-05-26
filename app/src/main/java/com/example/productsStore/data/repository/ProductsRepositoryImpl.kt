@@ -1,21 +1,24 @@
-package com.example.productsStore.data
+package com.example.productsStore.data.repository
 
 import com.example.productsStore.core.CACHE_EXPIRATION_DATE_IN_SECONDS
 import com.example.productsStore.core.Resource
 import com.example.productsStore.core.domain.DomainError
 import com.example.productsStore.core.logger.LoggingProvider
+import com.example.productsStore.data.local.dao.ProductCartDao
 import com.example.productsStore.data.local.dao.ProductDetailsCacheDao
+import com.example.productsStore.data.local.entity.CartedProductEntity
 import com.example.productsStore.data.mapper.toDomain
 import com.example.productsStore.data.mapper.toEntity
 import com.example.productsStore.data.remote.service.ProductsService
 import com.example.productsStore.domain.model.Product
 import com.example.productsStore.domain.model.ProductDetails
 import com.example.productsStore.domain.repository.ProductsRepository
+import kotlinx.coroutines.flow.Flow
 import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
 import kotlin.coroutines.cancellation.CancellationException
-import kotlin.time.Clock.System
+import kotlin.time.Clock
 
 class ProductsRepositoryImpl @Inject constructor(
     private val productsService: ProductsService,
@@ -45,7 +48,7 @@ class ProductsRepositoryImpl @Inject constructor(
 
     override suspend fun getProductDetails(id: Int, fields: String): Resource<ProductDetails> {
         val cachedDetails = productDetailsCacheDao.getDetails(id)
-        val currentTimestamp = System.now().epochSeconds
+        val currentTimestamp = Clock.System.now().epochSeconds
         val isCacheNotExpired = cachedDetails != null && cachedDetails.timestamp + CACHE_EXPIRATION_DATE_IN_SECONDS > currentTimestamp
 
         return try {
@@ -60,6 +63,27 @@ class ProductsRepositoryImpl @Inject constructor(
             Resource.Error(DomainError.ServerIssue)
         } catch (e: IOException) {
             if(cachedDetails != null) return Resource.Success(cachedDetails.toDomain(true))
+            logger.e(TAG, e.message ?: "Unknown error.")
+            Resource.Error(DomainError.NetworkIssue)
+        } catch (e: Exception) {
+            if (e is CancellationException) throw e
+            logger.e(TAG, e.message ?: "Unknown error.")
+            Resource.Error(DomainError.Other)
+        }
+    }
+
+    override suspend fun getProductById(id: Int, fields: String): Resource<Product> {
+        return try {
+            val response = productsService.getProductById(id, fields)?.toDomain()
+            if(response == null) {
+                logger.e(TAG, "Product by id = $id is not found.")
+                return Resource.Error(DomainError.Other)
+            }
+            Resource.Success(response)
+        } catch (e: HttpException) {
+            logger.e(TAG, e.message ?: "Unknown error.")
+            Resource.Error(DomainError.ServerIssue)
+        } catch (e: IOException) {
             logger.e(TAG, e.message ?: "Unknown error.")
             Resource.Error(DomainError.NetworkIssue)
         } catch (e: Exception) {

@@ -2,22 +2,22 @@ package com.example.productsStore.data.local.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
-import androidx.room.OnConflictStrategy.Companion.IGNORE
+import androidx.room.OnConflictStrategy.Companion.REPLACE
 import androidx.room.Query
-import com.example.productsStore.data.local.entity.CartedProductsEntity
+import com.example.productsStore.data.local.entity.CartedProductEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ProductCartDao {
     @Query("SELECT * FROM carted_products_table")
-    fun getCartedProducts() : Flow<CartedProductsEntity>
+    fun getCartedProducts() : Flow<List<CartedProductEntity>>
 
-    @Insert(onConflict = IGNORE)
-    suspend fun addToCart(cartedProductsEntity: CartedProductsEntity)
+    @Insert(onConflict = REPLACE)
+    suspend fun putProduct(cartedProductEntity: CartedProductEntity)
+
+    @Query("SELECT quantity FROM carted_products_table WHERE product_id = :id")
+    suspend fun getProductQuantityInCart(id: Int) : Int?
 
     @Query("DELETE FROM carted_products_table")
     suspend fun clearCart()
-
-    @Query("SELECT EXISTS(SELECT 1 FROM carted_products_table WHERE product_id = :productId)")
-    suspend fun isCarted(productId: Int) : Boolean
 }

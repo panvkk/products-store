@@ -22,9 +22,15 @@ object DatabaseModule {
         klass = ProductsStoreDatabase::class.java,
         name = "product-details-db.db"
     )
-        .addMigrations(ProductsStoreDatabase.MIGRATION_1_2)
+        .addMigrations(
+            ProductsStoreDatabase.MIGRATION_1_2,
+            ProductsStoreDatabase.MIGRATION_2_3
+        )
         .build()
 
     @Provides
     fun provideProductDetailsCacheDao(db: ProductsStoreDatabase) = db.productDetailsCacheDao()
+
+    @Provides
+    fun provideProductCartDao(db: ProductsStoreDatabase) = db.productCartDao()
 }
