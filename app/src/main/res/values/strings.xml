@@ -20,4 +20,6 @@
     <string name="cart_top_bar">Cart</string>
     <string name="navigate_back_content_description">Navigate back</string>
     <string name="navigate_to_cart_content_description">Navigate to cart</string>
+    <string name="empty_cart">Your cart is empty.</string>
+    <string name="clear_cart_button">Clear cart</string>
 </resources>

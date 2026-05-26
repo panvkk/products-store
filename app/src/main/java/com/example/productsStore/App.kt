@@ -39,6 +39,12 @@ fun App(navController: NavHostController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
+    val navigateToCart = {
+        navController.navigate(CartDestination) {
+            popUpTo(CartDestination) { inclusive = false }
+            launchSingleTop = true
+        }
+    }
     Scaffold(
         topBar = {
             when {
@@ -47,7 +53,7 @@ fun App(navController: NavHostController) {
                         title = stringResource(R.string.products_list_top_bar),
                         canNavigateUp = false,
                         canNavigateToCart = true,
-                        navigateToCart = { navController.navigate(CartDestination) }
+                        navigateToCart = navigateToCart
                     )
                 }
                 currentDestination?.hasRoute<ProductDetailsDestination>() ?: false -> {
@@ -56,7 +62,7 @@ fun App(navController: NavHostController) {
                         canNavigateUp = true,
                         canNavigateToCart = true,
                         navigateUp = { navController.popBackStack() },
-                        navigateToCart = { navController.navigate(CartDestination) }
+                        navigateToCart = navigateToCart
                     )
                 }
                 currentDestination?.hasRoute<CartDestination>() ?: false -> {
@@ -72,7 +78,7 @@ fun App(navController: NavHostController) {
                         title = stringResource(R.string.default_top_bar),
                         canNavigateUp = false,
                         canNavigateToCart = true,
-                        navigateToCart = { navController.navigate(CartDestination) }
+                        navigateToCart = navigateToCart
                     )
                 }
             }
