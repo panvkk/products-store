@@ -41,7 +41,7 @@ fun App(navController: NavHostController) {
 
     val navigateToCart = {
         navController.navigate(CartDestination) {
-            popUpTo(CartDestination) { inclusive = false }
+            popUpTo(ProductsListDestination) { inclusive = false }
             launchSingleTop = true
         }
     }
