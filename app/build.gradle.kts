@@ -23,6 +23,7 @@ android {
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -32,6 +33,11 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+        }
+    }
+    testOptions {
+        unitTests.all {
+            it.useJUnitPlatform()
         }
     }
     kotlin {
@@ -75,4 +81,14 @@ dependencies {
     ksp(libs.androidx.room.compiler)
 
     implementation(libs.glide.compose)
+
+    // Test
+    testImplementation(libs.junit.jupiter.api)
+    testImplementation(libs.kotlin.test)
+    testImplementation(libs.kotlinx.coroutines.test)
+
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.kotlin.test)
+    androidTestImplementation(libs.kotlinx.coroutines.test)
+    androidTestImplementation(libs.androidx.runner)
 }
