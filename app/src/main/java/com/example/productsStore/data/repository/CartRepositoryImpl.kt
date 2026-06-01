@@ -7,6 +7,7 @@ import com.example.productsStore.data.mapper.toDomain
 import com.example.productsStore.domain.model.CartedProduct
 import com.example.productsStore.domain.repository.CartRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -18,16 +19,29 @@ class CartRepositoryImpl @Inject constructor(
     override fun getCartedProducts() : Flow<List<CartedProduct>>{
         return productCartDao.getCartedProducts()
             .map { cartedProductEntities -> cartedProductEntities.map { it.toDomain() } }
+            .catch { e -> logger.e(TAG, e.message ?: UNKNOWN_ERROR) }
     }
 
     override suspend fun addToCart(id: Int) {
-        val currentQuantityInCart = productCartDao.getProductQuantityInCart(id) ?: 0
-        productCartDao.putProduct(
-            CartedProductEntity(id, currentQuantityInCart + 1)
-        )
+        try {
+            val currentQuantityInCart = productCartDao.getProductQuantityInCart(id) ?: 0
+            productCartDao.putProduct(
+                CartedProductEntity(id, currentQuantityInCart + 1)
+            )
+        } catch (e: Exception) {
+            logger.e(TAG, e.message ?: UNKNOWN_ERROR)
+        }
     }
 
     override suspend fun clearCart() {
-        productCartDao.clearCart()
+        try {
+            productCartDao.clearCart()
+        } catch (e: Exception) {
+            logger.e(TAG, e.message ?: UNKNOWN_ERROR)
+        }
+    }
+    companion object {
+        private const val TAG = "CartRepositoryImpl"
+        private const val UNKNOWN_ERROR = "Unknown error."
     }
 }
