@@ -8,7 +8,6 @@ import com.example.productsStore.testing.stub.LoggingProviderStub
 import com.example.productsStore.testing.stub.ProductDetailsCacheDaoStub
 import com.example.productsStore.testing.stub.ProductsServiceStub
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.Assertions.assertInstanceOf
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertNotNull
@@ -60,10 +59,12 @@ internal class ProductRepositoryImplTest {
         productsService.productDetailsToBeReturned = detailsFromNetwork
         productDetailsCacheDao.productDetailsToBeReturned = cachedDetails
         val actual = createRepository().getProductDetails(1, "")
+        val wasServiceCalled = productsService.wasCalled
 
         // THEN
         assertTrue(actual is Resource.Success)
         assertEquals(expectedTitle, actual.data.title)
+        assertEquals(false, wasServiceCalled)
     }
 
     @Test
@@ -160,6 +161,7 @@ internal class ProductRepositoryImplTest {
         // THEN
         assertTrue(actual is Resource.Success)
         assertEquals(expectedTitle, actual.data.title)
+        assertEquals(true, actual.data.isIrrelevantInfo)
     }
 
     @Test
