@@ -1,5 +1,7 @@
 [versions]
 agp = "9.0.1"
+core = "1.1.0"
+android = "1.1.0"
 junit = "1.1.5"
 junitJupiterApi = "6.0.3"
 junitJupiterParams = "5.11.0"
@@ -8,6 +10,7 @@ coreKtx = "1.17.0"
 appcompat = "1.7.1"
 kotlinTest = "2.3.21"
 kotlinxCoroutinesTest = "1.9.0"
+logging = "1.1.0"
 material = "1.13.0"
 activity = "1.12.1"
 constraintlayout = "2.2.1"
@@ -26,16 +29,19 @@ glide = "1.0.0-beta01"
 runner = "1.5.2"
 
 [libraries]
+kotea-android = { module = "ru.tinkoff.kotea:android", version.ref = "android" }
 androidx-compose-material-icons-core = { module = "androidx.compose.material:material-icons-core" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 androidx-junit = { module = "androidx.test.ext:junit", version.ref = "junit" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 androidx-runner = { module = "androidx.test:runner", version.ref = "runner" }
+kotea-core = { module = "ru.tinkoff.kotea:core", version.ref = "core" }
 junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junitJupiterApi" }
 junit-jupiter-params = { module = "org.junit.jupiter:junit-jupiter-params", version.ref = "junitJupiterParams" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlinTest" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }
+kotea-logging = { module = "ru.tinkoff.kotea:logging", version.ref = "logging" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }

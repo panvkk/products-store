@@ -82,6 +82,11 @@ dependencies {
 
     implementation(libs.glide.compose)
 
+    // KoTEA
+    implementation(libs.kotea.core)
+    implementation(libs.kotea.android)
+    implementation(libs.kotea.logging)
+
     // Test
     testImplementation(libs.junit.jupiter.api)
     testImplementation(libs.kotlin.test)
