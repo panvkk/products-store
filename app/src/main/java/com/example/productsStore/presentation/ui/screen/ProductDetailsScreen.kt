@@ -150,7 +150,7 @@ fun ProductDetailsScreen(
                 if(currentState.productDetails.isExpiredInfo) {
                     ErrorPage(
                         stringResource(R.string.expired_information),
-                        { store.dispatch(ProductDetailsEvent.Ui.RefreshDetails(state.productId)) })
+                        { store.dispatch(ProductDetailsEvent.Ui.OnRefreshDetails(state.productId)) })
                 }
             }
             is ProductDetailsScreenState.Error -> {
@@ -161,7 +161,7 @@ fun ProductDetailsScreen(
                 }
                 ErrorPage(
                     errorMessage,
-                    { store.dispatch(ProductDetailsEvent.Ui.RefreshDetails(state.productId)) }
+                    { store.dispatch(ProductDetailsEvent.Ui.OnRefreshDetails(state.productId)) }
                 )
             }
             is ProductDetailsScreenState.Loading -> {

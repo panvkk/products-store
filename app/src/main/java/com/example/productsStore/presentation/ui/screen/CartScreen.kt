@@ -14,6 +14,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -21,7 +22,8 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.productsStore.core.domain.DomainError
-import com.example.productsStore.presentation.model.CartUiState
+import com.example.productsStore.presentation.contract.CartEvent
+import com.example.productsStore.presentation.contract.CartState
 import com.example.productsStore.presentation.ui.component.ProductCard
 import com.example.productsStore.presentation.viewmodel.CartViewModel
 import com.example.productsstrore.R
@@ -32,7 +34,8 @@ fun CartScreen(
     onClickProduct: (Int) -> Unit,
     viewModel: CartViewModel
 ) {
-    val state = viewModel.uiState.collectAsStateWithLifecycle().value
+    val store = viewModel.store
+    val state by store.state.collectAsStateWithLifecycle()
 
     Box(modifier = modifier.fillMaxSize()) {
         LazyColumn(
@@ -40,12 +43,12 @@ fun CartScreen(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            when(state) {
-                is CartUiState.Content -> {
-                    if(state.cartItems.isEmpty()) {
+            when(val currentState = state) {
+                is CartState.Content -> {
+                    if(currentState.cartItems.isEmpty()) {
                         item { Text(stringResource(R.string.empty_cart)) }
                     } else {
-                        items(state.cartItems, { it.product.id }) { cartItem ->
+                        items(currentState.cartItems, { it.product.id }) { cartItem ->
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.medium_padding)),
@@ -70,23 +73,23 @@ fun CartScreen(
                         }
                     }
                 }
-                is CartUiState.Error -> {
+                is CartState.Error -> {
                     item {
-                        val errorMessage = when(state.error) {
+                        val errorMessage = when(currentState.error) {
                             is DomainError.NetworkIssue -> stringResource(R.string.check_your_internet_connection)
                             is DomainError.ServerIssue -> stringResource(R.string.please_try_again_later)
                             else -> stringResource(R.string.unknown_error)
                         }
-//                    ErrorPage(errorMessage, { viewModel.fetchProductDetails() })
+//                      ErrorPage(errorMessage, {  })
                     }
                 }
-                is CartUiState.Loading -> {
+                is CartState.Loading -> {
                     item { Text(stringResource(R.string.loading_title)) }
                 }
             }
         }
         FloatingActionButton(
-            onClick = { viewModel.clearCart() },
+            onClick = { store.dispatch(CartEvent.Ui.OnClearCart) },
             containerColor = MaterialTheme.colorScheme.primary,
             modifier = Modifier
                 .padding(dimensionResource(R.dimen.large_padding))

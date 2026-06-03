@@ -16,7 +16,7 @@ sealed interface ProductDetailsScreenState {
 
 sealed interface ProductDetailsEvent {
     sealed interface Ui : ProductDetailsEvent {
-        data class RefreshDetails(val productId: Int?) : Ui
+        data class OnRefreshDetails(val productId: Int?) : Ui
         data class SetProductId(val productId: Int) : Ui
     }
     sealed interface Internal : ProductDetailsEvent {

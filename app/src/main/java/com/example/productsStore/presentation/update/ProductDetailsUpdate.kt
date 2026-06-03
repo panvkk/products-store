@@ -19,7 +19,7 @@ class ProductDetailsUpdate : Update<ProductDetailsState, ProductDetailsEvent, Pr
                     state = state.copy(productId = event.productId),
                     commands = listOf(LoadProductDetails(event.productId))
                 )
-            is ProductDetailsEvent.Ui.RefreshDetails ->
+            is ProductDetailsEvent.Ui.OnRefreshDetails ->
                 Next(
                     commands = if (event.productId != null)
                         listOf(LoadProductDetails(event.productId))

@@ -2,6 +2,9 @@ package com.example.productsStore.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.productsStore.presentation.contract.CartEvent
+import com.example.productsStore.presentation.contract.CartNews
+import com.example.productsStore.presentation.contract.CartState
 import com.example.productsStore.presentation.contract.ProductDetailsEvent
 import com.example.productsStore.presentation.contract.ProductDetailsNews
 import com.example.productsStore.presentation.contract.ProductDetailsState
@@ -29,3 +32,8 @@ class ProductsListViewModel @Inject constructor(
 class ProductDetailsViewModel @Inject constructor(
     store: @JvmSuppressWildcards Store<ProductDetailsState, ProductDetailsEvent.Ui, ProductDetailsNews>
 ) : StoreViewModel<ProductDetailsState, ProductDetailsEvent.Ui, ProductDetailsNews>(store)
+
+@HiltViewModel
+class CartViewModel @Inject constructor(
+    store: @JvmSuppressWildcards Store<CartState, CartEvent.Ui, CartNews>
+) : StoreViewModel<CartState, CartEvent.Ui, CartNews>(store)
