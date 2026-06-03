@@ -1,27 +1,29 @@
 package com.example.productsStore.presentation.di
 
-import com.example.productsStore.core.di.ApplicationScope
+import com.example.productsStore.presentation.commandshandler.ProductDetailsCommandsHandler
 import com.example.productsStore.presentation.commandshandler.ProductsListCommandsHandler
-import com.example.productsStore.presentation.contract.ProductsListCommand
+import com.example.productsStore.presentation.contract.ProductDetailsEvent
+import com.example.productsStore.presentation.contract.ProductDetailsNews
+import com.example.productsStore.presentation.contract.ProductDetailsScreenState
+import com.example.productsStore.presentation.contract.ProductDetailsState
 import com.example.productsStore.presentation.contract.ProductsListEvent
 import com.example.productsStore.presentation.contract.ProductsListNews
 import com.example.productsStore.presentation.contract.ProductsListState
+import com.example.productsStore.presentation.update.ProductDetailsUpdate
 import com.example.productsStore.presentation.update.ProductsListUpdate
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.CoroutineScope
-import javax.inject.Singleton
+import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.android.scopes.ViewModelScoped
 import ru.tinkoff.kotea.core.KoteaStore
 import ru.tinkoff.kotea.core.Store
-import javax.inject.Qualifier
 
 @Module
-@InstallIn(SingletonComponent::class)
+@InstallIn(ViewModelComponent::class)
 object PresentationModule {
     @Provides
-    @Singleton
+    @ViewModelScoped
     fun provideProductsListStore(
         productsListCommandsHandler: ProductsListCommandsHandler
     ) : Store<ProductsListState, ProductsListEvent.Ui, ProductsListNews> =
@@ -35,5 +37,20 @@ object PresentationModule {
             initialCommands = emptyList(),
             commandsFlowHandlers = listOf(productsListCommandsHandler),
             update = ProductsListUpdate()
+        )
+
+    @Provides
+    @ViewModelScoped
+    fun provideProductDetailsStore(
+        productDetailsCommandsHandler: ProductDetailsCommandsHandler
+    ) : Store<ProductDetailsState, ProductDetailsEvent.Ui, ProductDetailsNews> =
+        KoteaStore(
+            initialState = ProductDetailsState(
+                null,
+                ProductDetailsScreenState.Loading
+            ),
+            initialCommands = emptyList(),
+            commandsFlowHandlers = listOf(productDetailsCommandsHandler),
+            update = ProductDetailsUpdate()
         )
 }

@@ -22,17 +22,19 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.bumptech.glide.integration.compose.placeholder
 import com.example.productsStore.core.domain.DomainError
-import com.example.productsStore.presentation.model.ProductDetailsUiState
+import com.example.productsStore.presentation.contract.ProductDetailsEvent
+import com.example.productsStore.presentation.contract.ProductDetailsScreenState
 import com.example.productsStore.presentation.ui.component.ErrorPage
 import com.example.productsStore.presentation.ui.component.ProductInfoRow
 import com.example.productsStore.presentation.ui.theme.InStockColor
@@ -46,8 +48,9 @@ fun ProductDetailsScreen(
     viewModel: ProductDetailsViewModel,
     modifier: Modifier = Modifier
 ) {
+    val store = viewModel.store
+    val state by store.state.collectAsStateWithLifecycle()
     val scrollState = rememberScrollState()
-    val state = viewModel.uiState.collectAsState().value
 
     Column(
         modifier = modifier
@@ -55,10 +58,10 @@ fun ProductDetailsScreen(
             .verticalScroll(scrollState),
         verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.large_padding))
     ) {
-        when(state) {
-            is ProductDetailsUiState.Content -> {
+        when(val currentState = state.screenState) {
+            is ProductDetailsScreenState.Content -> {
                 GlideImage(
-                    model = state.productDetails.mainImageUri,
+                    model = currentState.productDetails.mainImageUri,
                     loading = placeholder(painterResource(R.drawable.loading_image)),
                     failure = placeholder(painterResource(R.drawable.no_image_available)),
                     contentDescription = stringResource(R.string.product_image_content_description),
@@ -72,12 +75,12 @@ fun ProductDetailsScreen(
                     verticalAlignment = Alignment.Top
                 ) {
                     Text(
-                        text = state.productDetails.productTitle,
+                        text = currentState.productDetails.productTitle,
                         style = MaterialTheme.typography.titleLarge,
                         modifier = Modifier.weight(1f)
                     )
                     Text(
-                        text = "$${state.productDetails.priceInUSD}",
+                        text = "$${currentState.productDetails.priceInUSD}",
                         style = MaterialTheme.typography.headlineSmall,
                         color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.padding(start = dimensionResource(R.dimen.small_padding))
@@ -103,16 +106,16 @@ fun ProductDetailsScreen(
                             )
                             Spacer(Modifier.width(dimensionResource(R.dimen.extra_small_padding)))
                             Text(
-                                text = state.productDetails.rating.toString(),
+                                text = currentState.productDetails.rating.toString(),
                                 style = MaterialTheme.typography.labelLarge
                             )
                         }
                     }
 
                     Text(
-                        text = state.productDetails.availabilityStatus,
+                        text = currentState.productDetails.availabilityStatus,
                         style = MaterialTheme.typography.labelLarge,
-                        color = if (state.productDetails.availabilityStatus.contains("In Stock", ignoreCase = true))
+                        color = if (currentState.productDetails.availabilityStatus.contains("In Stock", ignoreCase = true))
                             InStockColor else MaterialTheme.colorScheme.error
                     )
                 }
@@ -140,23 +143,28 @@ fun ProductDetailsScreen(
                         modifier = Modifier.padding(dimensionResource(R.dimen.medium_padding)),
                         verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.small_padding))
                     ) {
-                        ProductInfoRow(label = stringResource(R.string.weight_title), value = "${state.productDetails.weight}" + stringResource(R.string.gram))
-                        ProductInfoRow(label = stringResource(R.string.warranty_title), value = state.productDetails.warrantyInformation)
+                        ProductInfoRow(label = stringResource(R.string.weight_title), value = "${currentState.productDetails.weight}" + stringResource(R.string.gram))
+                        ProductInfoRow(label = stringResource(R.string.warranty_title), value = currentState.productDetails.warrantyInformation)
                     }
                 }
-                if(state.productDetails.isExpiredInfo) {
-                    ErrorPage(stringResource(R.string.expired_information), { viewModel.fetchProductDetails() })
+                if(currentState.productDetails.isExpiredInfo) {
+                    ErrorPage(
+                        stringResource(R.string.expired_information),
+                        { store.dispatch(ProductDetailsEvent.Ui.RefreshDetails(state.productId)) })
                 }
             }
-            is ProductDetailsUiState.Error -> {
-                val errorMessage = when(state.error) {
+            is ProductDetailsScreenState.Error -> {
+                val errorMessage = when(currentState.error) {
                     is DomainError.NetworkIssue -> stringResource(R.string.check_your_internet_connection)
                     is DomainError.ServerIssue -> stringResource(R.string.please_try_again_later)
                     else -> stringResource(R.string.unknown_error)
                 }
-                ErrorPage(errorMessage, { viewModel.fetchProductDetails() })
+                ErrorPage(
+                    errorMessage,
+                    { store.dispatch(ProductDetailsEvent.Ui.RefreshDetails(state.productId)) }
+                )
             }
-            is ProductDetailsUiState.Loading -> {
+            is ProductDetailsScreenState.Loading -> {
                 Text(stringResource(R.string.loading_title))
             }
         }

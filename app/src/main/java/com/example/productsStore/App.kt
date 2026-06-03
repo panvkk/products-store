@@ -20,6 +20,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.toRoute
+import com.example.productsStore.presentation.contract.ProductDetailsEvent
 import com.example.productsStore.presentation.ui.component.ProductsStoreTopBar
 import com.example.productsStore.presentation.ui.screen.CartScreen
 import com.example.productsStore.presentation.ui.screen.ProductDetailsScreen
@@ -120,7 +121,11 @@ fun App(navController: NavHostController) {
                 val args = backStackEntry.toRoute<ProductDetailsDestination>()
                 val productDetailsVM = hiltViewModel<ProductDetailsViewModel>()
 
-                LaunchedEffect(args) { productDetailsVM.setProductId(args.productId) }
+                LaunchedEffect(args) {
+                    productDetailsVM.store.dispatch(
+                        ProductDetailsEvent.Ui.SetProductId(args.productId)
+                    )
+                }
 
                 ProductDetailsScreen(viewModel = productDetailsVM)
             }

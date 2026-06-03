@@ -21,10 +21,11 @@ class ProductsListUpdate : Update<ProductsListState, ProductsListEvent, Products
                 )
             }
             is ProductsListEvent.Ui.OnLoadNextPage -> {
+                val shouldFetchNextPage = !state.isLoadingGoing && !state.isLastPageReached
                 Next(
                     state = state,
-                    commands = if (!state.isLoadingGoing && !state.isLastPageReached)
-                        listOf(ProductsListCommand.FetchNextPage(state)) else emptyList()
+                    commands = if (shouldFetchNextPage) listOf(ProductsListCommand.FetchNextPage(state))
+                        else emptyList()
                 )
             }
             is ProductsListEvent.Ui.OnAddToCart ->
