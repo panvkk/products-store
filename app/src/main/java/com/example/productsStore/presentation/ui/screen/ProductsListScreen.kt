@@ -1,5 +1,6 @@
 package com.example.productsStore.presentation.ui.screen
 
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -13,12 +14,14 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.productsStore.core.domain.DomainError
 import com.example.productsStore.presentation.contract.ProductsListEvent
+import com.example.productsStore.presentation.contract.ProductsListNews
 import com.example.productsStore.presentation.contract.ProductsListState
 import com.example.productsStore.presentation.ui.component.ErrorPage
 import com.example.productsStore.presentation.ui.component.ProductCard
@@ -28,12 +31,28 @@ import com.example.productsstrore.R
 @Composable
 fun ProductsListScreen(
     modifier: Modifier = Modifier,
-    onClickProduct: (id: Int) -> Unit,
+    navigateToDetails: (id: Int) -> Unit,
     viewModel: ProductsListViewModel
 ) {
+    val context = LocalContext.current
     val store = viewModel.store
     val state: ProductsListState by store.state.collectAsStateWithLifecycle()
     val itemsCountBeforeFetch = state.pageSize / 4
+
+    LaunchedEffect(store.news) {
+        store.news.collect { new ->
+            when(new) {
+                is ProductsListNews.NavigateToDetails -> navigateToDetails(new.productId)
+                is ProductsListNews.ShowAddedToCartToast -> {
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.product_added_to_cart_toast),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
+    }
 
     BoxWithConstraints(modifier = modifier) {
         val itemHeight = with(LocalDensity.current) {
@@ -56,7 +75,9 @@ fun ProductsListScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = dimensionResource(R.dimen.small_padding))
-                        .clickable { onClickProduct(product.id) }
+                        .clickable {
+                            store.dispatch(ProductsListEvent.Ui.OnNavigateDetails(product.id))
+                        }
                 )
                 if(index + itemsCountBeforeFetch == state.products.size - 1
                     && state.error == null) {

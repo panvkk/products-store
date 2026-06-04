@@ -105,7 +105,7 @@ fun App(navController: NavHostController) {
 
                 ProductsListScreen(
                     viewModel = productsListVM,
-                    onClickProduct = { id: Int -> navController.navigate(ProductDetailsDestination(id)) }
+                    navigateToDetails = { id: Int -> navController.navigate(ProductDetailsDestination(id)) }
                 )
             }
             composable<ProductDetailsDestination>(
@@ -142,7 +142,7 @@ fun App(navController: NavHostController) {
                 val cartViewModel = hiltViewModel<CartViewModel>()
 
                 CartScreen(
-                    onClickProduct = { id: Int ->
+                    navigateToDetails = { id: Int ->
                         navController.navigate(ProductDetailsDestination(id))
                     },
                     viewModel = cartViewModel

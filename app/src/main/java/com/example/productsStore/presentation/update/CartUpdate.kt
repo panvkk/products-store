@@ -17,9 +17,11 @@ class CartUpdate : Update<CartState, CartEvent, CartCommand, CartNews> {
                 Next(state = state, commands = listOf(CartCommand.ClearCart))
             CartEvent.Ui.OnLoadCart ->
                 Next(state = state, commands = listOf(CartCommand.LoadCart))
+            is CartEvent.Ui.OnNavigateToDetails ->
+                Next(state = state, news = listOf(CartNews.NavigateToDetails(event.productId)))
             is CartEvent.Internal.CartLoaded ->
                 Next(state = event.newState)
             CartEvent.Internal.CartCleared ->
-                Next(state = state, commands = listOf(CartCommand.LoadCart))
+                Next(state = state, commands = listOf(CartCommand.LoadCart), news = listOf(CartNews.ShowCartClearedToast))
         }
 }

@@ -13,6 +13,7 @@ sealed interface CartEvent {
     sealed interface Ui : CartEvent {
         data object OnClearCart : Ui
         data object OnLoadCart : Ui
+        data class OnNavigateToDetails(val productId: Int) : Ui
     }
     sealed interface Internal : CartEvent {
         data class CartLoaded(val newState: CartState) : Internal
@@ -26,5 +27,6 @@ sealed interface CartCommand {
 }
 
 sealed interface CartNews {
-
+    data class NavigateToDetails(val productId: Int) : CartNews
+    data object ShowCartClearedToast : CartNews
 }

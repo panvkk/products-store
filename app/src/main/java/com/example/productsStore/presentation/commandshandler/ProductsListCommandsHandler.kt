@@ -29,7 +29,10 @@ class ProductsListCommandsHandler @Inject constructor(
                     val newState = fetchNextPage(command.state)
                     emit(ProductsListEvent.Internal.NextPageLoaded(newState))
                 }
-                is ProductsListCommand.AddToCart -> { addToCart(command.productId) }
+                is ProductsListCommand.AddToCart -> {
+                    addToCart(command.productId)
+                    emit(ProductsListEvent.Internal.AddedToCart)
+                }
             }
         }
     }

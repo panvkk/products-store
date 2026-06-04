@@ -2,7 +2,6 @@ package com.example.productsStore.presentation.contract
 
 import com.example.productsStore.core.domain.DomainError
 import com.example.productsStore.presentation.model.ProductUiModel
-import ru.tinkoff.kotea.core.Store
 
 data class ProductsListState(
     val isLoadingGoing: Boolean,
@@ -17,8 +16,10 @@ sealed interface ProductsListEvent {
         data class OnSetupPageSize(val pageSize: Int) : Ui
         data class OnAddToCart(val productId: Int) : Ui
         data object OnLoadNextPage : Ui
+        data class OnNavigateDetails(val productId: Int) : Ui
     }
     sealed interface Internal : ProductsListEvent {
+        data object AddedToCart : Internal
         data class NextPageLoaded(val newState: ProductsListState) : Internal
         data object LoadingStarted : Internal
     }
@@ -30,5 +31,6 @@ sealed interface ProductsListCommand {
 }
 
 sealed interface ProductsListNews {
-
+    data class NavigateToDetails(val productId: Int) : ProductsListNews
+    data object ShowAddedToCartToast : ProductsListNews
 }

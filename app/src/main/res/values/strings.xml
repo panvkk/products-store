@@ -22,4 +22,6 @@
     <string name="navigate_to_cart_content_description">Navigate to cart</string>
     <string name="empty_cart">Your cart is empty.</string>
     <string name="clear_cart_button">Clear cart</string>
+    <string name="product_added_to_cart_toast">Product has been added to the cart</string>
+    <string name="cart_cleared_toast">Cart has been cleared</string>
 </resources>

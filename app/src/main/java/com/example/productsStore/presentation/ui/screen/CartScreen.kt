@@ -1,5 +1,6 @@
 package com.example.productsStore.presentation.ui.screen
 
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,15 +15,18 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.productsStore.core.domain.DomainError
 import com.example.productsStore.presentation.contract.CartEvent
+import com.example.productsStore.presentation.contract.CartNews
 import com.example.productsStore.presentation.contract.CartState
 import com.example.productsStore.presentation.ui.component.ProductCard
 import com.example.productsStore.presentation.viewmodel.CartViewModel
@@ -31,12 +35,27 @@ import com.example.productsstrore.R
 @Composable
 fun CartScreen(
     modifier: Modifier = Modifier,
-    onClickProduct: (Int) -> Unit,
+    navigateToDetails: (Int) -> Unit,
     viewModel: CartViewModel
 ) {
+    val context = LocalContext.current
     val store = viewModel.store
     val state by store.state.collectAsStateWithLifecycle()
 
+    LaunchedEffect(store.news) {
+        store.news.collect { new ->
+            when(new) {
+                is CartNews.NavigateToDetails -> navigateToDetails(new.productId)
+                is CartNews.ShowCartClearedToast -> {
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.cart_cleared_toast),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
+    }
     Box(modifier = modifier.fillMaxSize()) {
         LazyColumn(
             modifier = Modifier.fillMaxWidth(),
@@ -62,7 +81,13 @@ fun CartScreen(
                                     canBeAddedToCart = false,
                                     modifier = Modifier
                                         .weight(8f)
-                                        .clickable { onClickProduct(cartItem.product.id) }
+                                        .clickable {
+                                            store.dispatch(
+                                                CartEvent.Ui.OnNavigateToDetails(
+                                                    cartItem.product.id
+                                                )
+                                            )
+                                        }
                                 )
                                 Text(
                                     text = "x${cartItem.quantity}",
