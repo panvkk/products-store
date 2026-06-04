@@ -57,44 +57,50 @@ fun CartScreen(
         }
     }
     Box(modifier = modifier.fillMaxSize()) {
+        val currentState = state
         LazyColumn(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            when(val currentState = state) {
+            when(currentState) {
                 is CartState.Content -> {
-                    if(currentState.cartItems.isEmpty()) {
-                        item { Text(stringResource(R.string.empty_cart)) }
-                    } else {
-                        items(currentState.cartItems, { it.product.id }) { cartItem ->
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.medium_padding)),
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = dimensionResource(R.dimen.small_padding))
+                    item {
+                        Text(
+                            text = if(currentState.cartItems.isEmpty())
+                                stringResource(R.string.empty_cart)
+                            else
+                                stringResource(R.string.cart_size_title, currentState.cartSize),
+                            style = MaterialTheme.typography.headlineSmall
+                        )
+                    }
+                    items(currentState.cartItems, { it.product.id }) { cartItem ->
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.medium_padding)),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = dimensionResource(R.dimen.small_padding))
 
-                            ) {
-                                ProductCard(
-                                    product = cartItem.product,
-                                    canBeAddedToCart = false,
-                                    modifier = Modifier
-                                        .weight(8f)
-                                        .clickable {
-                                            store.dispatch(
-                                                CartEvent.Ui.OnNavigateToDetails(
-                                                    cartItem.product.id
-                                                )
+                        ) {
+                            ProductCard(
+                                product = cartItem.product,
+                                canBeAddedToCart = false,
+                                modifier = Modifier
+                                    .weight(8f)
+                                    .clickable {
+                                        store.dispatch(
+                                            CartEvent.Ui.OnNavigateToDetails(
+                                                cartItem.product.id
                                             )
-                                        }
-                                )
-                                Text(
-                                    text = "x${cartItem.quantity}",
-                                    style = MaterialTheme.typography.titleLarge,
-                                    modifier = Modifier.weight(1f)
-                                )
-                            }
+                                        )
+                                    }
+                            )
+                            Text(
+                                text = "x${cartItem.quantity}",
+                                style = MaterialTheme.typography.titleLarge,
+                                modifier = Modifier.weight(1f)
+                            )
                         }
                     }
                 }
@@ -113,21 +119,24 @@ fun CartScreen(
                 }
             }
         }
-        FloatingActionButton(
-            onClick = { store.dispatch(CartEvent.Ui.OnClearCart) },
-            containerColor = MaterialTheme.colorScheme.primary,
-            modifier = Modifier
-                .padding(dimensionResource(R.dimen.large_padding))
-                .fillMaxWidth()
-                .height(dimensionResource(R.dimen.clear_cart_button_height))
-                .clip(MaterialTheme.shapes.medium)
-                .align(Alignment.BottomCenter)
-        ) {
-            Text(
-                text = stringResource(R.string.clear_cart_button),
-                style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.background
-            )
+        if(currentState is CartState.Content && currentState.cartItems.isNotEmpty()) {
+            FloatingActionButton(
+                onClick = { store.dispatch(CartEvent.Ui.OnClearCart) },
+                containerColor = MaterialTheme.colorScheme.primary,
+                modifier = Modifier
+                    .padding(dimensionResource(R.dimen.large_padding))
+                    .fillMaxWidth()
+                    .height(dimensionResource(R.dimen.clear_cart_button_height))
+                    .clip(MaterialTheme.shapes.medium)
+                    .align(Alignment.BottomCenter)
+            ) {
+                Text(
+                    text = stringResource(R.string.clear_cart_button),
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.background
+                )
+            }
         }
+
     }
 }

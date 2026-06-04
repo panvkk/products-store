@@ -42,7 +42,10 @@ class CartCommandsHandler @Inject constructor(
         getCartUseCase.invoke().map { resource ->
             when(resource) {
                 is Resource.Success -> {
-                    CartState.Content(resource.data.map { it.toUiModel() })
+                    val cartItems = resource.data.map { it.toUiModel() }
+                    var cartSize = 0
+                    cartItems.forEach { cartSize += it.quantity }
+                    CartState.Content(cartItems, cartSize)
                 }
                 is Resource.Error -> {
                     CartState.Error(resource.error)

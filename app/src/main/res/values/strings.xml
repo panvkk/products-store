@@ -24,4 +24,5 @@
     <string name="clear_cart_button">Clear cart</string>
     <string name="product_added_to_cart_toast">Product has been added to the cart</string>
     <string name="cart_cleared_toast">Cart has been cleared</string>
+    <string name="cart_size_title">Your cart has %1$d items</string>
 </resources>

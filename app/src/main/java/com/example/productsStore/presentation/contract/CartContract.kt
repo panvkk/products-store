@@ -6,7 +6,10 @@ import com.example.productsStore.presentation.model.CartItemUiModel
 sealed interface CartState {
     data object Loading : CartState
     data class Error(val error: DomainError) : CartState
-    data class Content(val cartItems: List<CartItemUiModel>) : CartState
+    data class Content(
+        val cartItems: List<CartItemUiModel>,
+        val cartSize: Int
+    ) : CartState
 }
 
 sealed interface CartEvent {
