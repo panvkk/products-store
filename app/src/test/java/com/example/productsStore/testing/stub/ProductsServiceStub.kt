@@ -20,7 +20,7 @@ internal class ProductsServiceStub : ProductsService {
         weight = 1,
         availabilityStatus = "",
         warrantyInformation = ""
-    ).also { wasCalled = true }
+    )
 
     override suspend fun getProducts(
         skip: Int,
