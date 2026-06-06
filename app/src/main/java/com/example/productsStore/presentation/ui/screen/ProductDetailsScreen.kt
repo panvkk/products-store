@@ -1,5 +1,6 @@
 package com.example.productsStore.presentation.ui.screen
 
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -36,15 +37,16 @@ import com.bumptech.glide.integration.compose.placeholder
 import com.example.productsStore.core.domain.DomainError
 import com.example.productsStore.presentation.contract.ProductDetailsEvent
 import com.example.productsStore.presentation.contract.ProductDetailsScreenState
+import com.example.productsStore.presentation.contract.ProductDetailsState
 import com.example.productsStore.presentation.ui.component.ErrorPage
 import com.example.productsStore.presentation.ui.component.ProductInfoRow
-import com.example.productsStore.presentation.ui.screen.testing.testtags.ProductsDetailsTestTags.PRODUCT_IMAGE
+import com.example.productsStore.presentation.ui.screen.testing.testtags.ProductDetailsTestTags.PRODUCT_IMAGE
+import com.example.productsStore.presentation.ui.screen.testing.testtags.ProductDetailsTestTags.ROOT_TAG
 import com.example.productsStore.presentation.ui.theme.InStockColor
 import com.example.productsStore.presentation.ui.theme.RatingStarColor
 import com.example.productsStore.presentation.viewmodel.ProductDetailsViewModel
 import com.example.productsstrore.R
 
-@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun ProductDetailsScreen(
     viewModel: ProductDetailsViewModel,
@@ -54,24 +56,45 @@ fun ProductDetailsScreen(
     val state by store.state.collectAsStateWithLifecycle()
     val scrollState = rememberScrollState()
 
+    ProductDetailsScreenContent(
+        state = state,
+        scrollState = scrollState,
+        modifier = modifier,
+        onRefreshDetails = { productId ->
+            store.dispatch(ProductDetailsEvent.Ui.OnRefreshDetails(productId))
+        }
+    )
+}
+
+@OptIn(ExperimentalGlideComposeApi::class)
+@Composable
+fun ProductDetailsScreenContent(
+    state: ProductDetailsState,
+    scrollState: ScrollState,
+    modifier: Modifier = Modifier,
+    onRefreshDetails: (Int?) -> Unit
+) {
     Column(
         modifier = modifier
             .fillMaxSize()
-            .verticalScroll(scrollState),
+            .verticalScroll(scrollState)
+            .testTag(ROOT_TAG),
         verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.large_padding))
     ) {
         when(val currentState = state.screenState) {
             is ProductDetailsScreenState.Content -> {
-                GlideImage(
-                    model = currentState.productDetails.mainImageUri,
-                    loading = placeholder(painterResource(R.drawable.loading_image)),
-                    failure = placeholder(painterResource(R.drawable.no_image_available)),
-                    contentDescription = stringResource(R.string.product_image_content_description),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(dimensionResource(R.dimen.product_image_height))
-                        .testTag(PRODUCT_IMAGE)
-                )
+                if(currentState.productDetails.mainImageUri != null) {
+                    GlideImage(
+                        model = currentState.productDetails.mainImageUri,
+                        loading = placeholder(painterResource(R.drawable.loading_image)),
+                        failure = placeholder(painterResource(R.drawable.no_image_available)),
+                        contentDescription = stringResource(R.string.product_image_content_description),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(dimensionResource(R.dimen.product_image_height))
+                            .testTag(PRODUCT_IMAGE)
+                    )
+                }
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -153,7 +176,8 @@ fun ProductDetailsScreen(
                 if(currentState.productDetails.isExpiredInfo) {
                     ErrorPage(
                         stringResource(R.string.expired_information),
-                        { store.dispatch(ProductDetailsEvent.Ui.OnRefreshDetails(state.productId)) })
+                        onRetry = { onRefreshDetails(state.productId) }
+                    )
                 }
             }
             is ProductDetailsScreenState.Error -> {
@@ -164,7 +188,7 @@ fun ProductDetailsScreen(
                 }
                 ErrorPage(
                     errorMessage,
-                    { store.dispatch(ProductDetailsEvent.Ui.OnRefreshDetails(state.productId)) }
+                    onRetry = { onRefreshDetails(state.productId) }
                 )
             }
             is ProductDetailsScreenState.Loading -> {

@@ -2,10 +2,8 @@ package com.example.productsStore.testing.ui.test
 
 import android.app.Application
 import androidx.compose.ui.test.SemanticsMatcher
-import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
-import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.hasParent
 import androidx.compose.ui.test.hasTestTag
@@ -102,7 +100,7 @@ internal class CartComposeScreenTest : TestCase(
     private fun itemAt(position: Int) : SemanticsMatcher =
         hasParent(
             hasTestTag(CartScreenTestTags.CART_ITEM)
-                    and SemanticsMatcher.Companion.expectValue(LazyListItemPosition, position)
+                    and SemanticsMatcher.expectValue(LazyListItemPosition, position)
         )
 
     private fun getCartItems() : List<CartItemUiModel>

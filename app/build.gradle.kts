@@ -71,6 +71,7 @@ dependencies {
     implementation(libs.retrofit.converter.kotlinx.serialization)
     implementation(libs.okhttp3.okhttp)
     implementation(libs.okhttp3.logging.interceptor)
+    implementation(libs.androidx.compose.foundation)
 
     // Hilt
     ksp(libs.hilt.compiler)
