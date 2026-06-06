@@ -17,7 +17,8 @@ internal class ProductsListUpdateTest {
         isLoadingGoing = true,
         isLastPageReached = false,
         products = emptyList(),
-        pageSize = 10
+        pageSize = 1,
+        error = null
     )
     private val testProducts = listOf(
         ProductUiModel(
@@ -32,7 +33,7 @@ internal class ProductsListUpdateTest {
     fun `GIVEN success loading WHEN NextPageLoaded THEN state correctly updates`() {
         // GIVEN
         val expectedScreenState = initialState.copy(isLoadingGoing = false, products = testProducts)
-        val event = ProductsListEvent.Internal.NextPageLoaded(expectedScreenState)
+        val event = ProductsListEvent.Internal.NextPageLoaded(testProducts, false, null)
 
         // WHEN
         val actualState: ProductsListState? = createUpdate().update(initialState, event).state
@@ -47,7 +48,7 @@ internal class ProductsListUpdateTest {
         // GIVEN
         val expectedError = DomainError.NetworkIssue
         val expectedScreenState = initialState.copy(isLoadingGoing = false, error = expectedError)
-        val event = ProductsListEvent.Internal.NextPageLoaded(expectedScreenState)
+        val event = ProductsListEvent.Internal.NextPageLoaded(emptyList(), false, expectedError)
 
         // WHEN
         val actualState: ProductsListState? = createUpdate().update(initialState, event).state
