@@ -51,7 +51,7 @@ class ProductsListUpdate : Update<ProductsListState, ProductsListEvent, Products
                     state = state.copy(
                         products = state.products + event.newProducts,
                         isLoadingGoing = false,
-                        isLastPageReached = event.newProducts.size < state.pageSize,
+                        isLastPageReached = event.isLastPage,
                         error = event.error
                     )
                 )

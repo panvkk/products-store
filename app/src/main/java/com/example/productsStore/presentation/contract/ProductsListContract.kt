@@ -22,6 +22,7 @@ sealed interface ProductsListEvent {
         data object AddedToCart : Internal
         data class NextPageLoaded(
             val newProducts: List<ProductUiModel>,
+            val isLastPage: Boolean,
             val error: DomainError?
         ) : Internal
         data object LoadingStarted : Internal

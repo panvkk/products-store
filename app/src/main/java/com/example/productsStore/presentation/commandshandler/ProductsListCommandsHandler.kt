@@ -31,6 +31,7 @@ class ProductsListCommandsHandler @Inject constructor(
                     emit(
                         ProductsListEvent.Internal.NextPageLoaded(
                             newProducts = result.newProducts,
+                            isLastPage = result.isLastPage,
                             error = result.error
                         )
                     )
@@ -55,16 +56,21 @@ class ProductsListCommandsHandler @Inject constructor(
         return when(result) {
             is Resource.Success -> {
                 val newProducts = result.data.map { it.toUiModel() }
-                FetchingNextPageResult(newProducts, null)
+                FetchingNextPageResult(
+                    newProducts = newProducts,
+                    isLastPage = newProducts.size < limit,
+                    error = null
+                )
             }
             is Resource.Error -> {
-                FetchingNextPageResult(emptyList(), result.error)
+                FetchingNextPageResult(emptyList(), false, result.error)
             }
         }
     }
 
     private data class FetchingNextPageResult(
         val newProducts: List<ProductUiModel>,
+        val isLastPage: Boolean,
         val error: DomainError? = null
     )
 }
