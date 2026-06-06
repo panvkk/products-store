@@ -29,12 +29,13 @@ internal class CartUpdateTest {
             quantity = 1
         )
     )
+    private val testCartSize = 1
     private val testNetworkError = DomainError.NetworkIssue
 
     @Test
     fun `GIVEN success loading WHEN CartLoaded THEN state correctly updates`() {
         // GIVEN
-        val expectedScreenState = CartState.Content(cartItems = testCartItems)
+        val expectedScreenState = CartState.Content(cartItems = testCartItems, cartSize = testCartSize)
         val event = CartEvent.Internal.CartLoaded(expectedScreenState)
 
         // WHEN

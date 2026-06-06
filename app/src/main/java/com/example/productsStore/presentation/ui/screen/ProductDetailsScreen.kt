@@ -25,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -37,6 +38,7 @@ import com.example.productsStore.presentation.contract.ProductDetailsEvent
 import com.example.productsStore.presentation.contract.ProductDetailsScreenState
 import com.example.productsStore.presentation.ui.component.ErrorPage
 import com.example.productsStore.presentation.ui.component.ProductInfoRow
+import com.example.productsStore.presentation.ui.screen.testing.testtags.ProductsDetailsTestTags.PRODUCT_IMAGE
 import com.example.productsStore.presentation.ui.theme.InStockColor
 import com.example.productsStore.presentation.ui.theme.RatingStarColor
 import com.example.productsStore.presentation.viewmodel.ProductDetailsViewModel
@@ -68,6 +70,7 @@ fun ProductDetailsScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(dimensionResource(R.dimen.product_image_height))
+                        .testTag(PRODUCT_IMAGE)
                 )
                 Row(
                     modifier = Modifier.fillMaxWidth(),
