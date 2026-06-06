@@ -21,15 +21,25 @@ class ProductsListUpdate : Update<ProductsListState, ProductsListEvent, Products
                 val newState = state.copy(pageSize = event.pageSize)
                 Next(
                     state = newState,
-                    commands = listOf(FetchNextPage(newState))
+                    commands = listOf(
+                        FetchNextPage(
+                            skip = newState.products.size,
+                            limit = newState.pageSize
+                        )
+                    )
                 )
             }
             is ProductsListEvent.Ui.OnLoadNextPage -> {
                 val shouldFetchNextPage = !state.isLoadingGoing && !state.isLastPageReached
                 Next(
                     state = state,
-                    commands = if (shouldFetchNextPage) listOf(FetchNextPage(state))
-                        else emptyList()
+                    commands = if (shouldFetchNextPage) listOf(
+                        FetchNextPage(
+                            skip = state.products.size,
+                            limit = state.pageSize
+                        )
+                    )
+                    else emptyList()
                 )
             }
             is ProductsListEvent.Ui.OnAddToCart ->
@@ -37,7 +47,14 @@ class ProductsListUpdate : Update<ProductsListState, ProductsListEvent, Products
             is ProductsListEvent.Ui.OnNavigateDetails ->
                 Next(state = state, news = listOf(NavigateToDetails(event.productId)))
             is ProductsListEvent.Internal.NextPageLoaded ->
-                Next(state = event.newState)
+                Next(
+                    state = state.copy(
+                        products = state.products + event.newProducts,
+                        isLoadingGoing = false,
+                        isLastPageReached = event.newProducts.size < state.pageSize,
+                        error = event.error
+                    )
+                )
             is ProductsListEvent.Internal.LoadingStarted ->
                 Next(state = state.copy(isLoadingGoing = true))
             is ProductsListEvent.Internal.AddedToCart ->

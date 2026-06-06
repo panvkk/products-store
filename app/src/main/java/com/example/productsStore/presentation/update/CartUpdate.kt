@@ -22,6 +22,6 @@ class CartUpdate : Update<CartState, CartEvent, CartCommand, CartNews> {
             is CartEvent.Internal.CartLoaded ->
                 Next(state = event.newState)
             CartEvent.Internal.CartCleared ->
-                Next(state = state, commands = listOf(CartCommand.LoadCart), news = listOf(CartNews.ShowCartClearedToast))
+                Next(state = CartState.Loading, commands = listOf(CartCommand.LoadCart), news = listOf(CartNews.ShowCartClearedToast))
         }
 }

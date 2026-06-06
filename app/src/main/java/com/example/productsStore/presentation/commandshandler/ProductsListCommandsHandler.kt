@@ -2,12 +2,13 @@ package com.example.productsStore.presentation.commandshandler
 
 import com.example.productsStore.core.Resource
 import com.example.productsStore.core.di.ApplicationScope
+import com.example.productsStore.core.domain.DomainError
 import com.example.productsStore.domain.usecase.AddToCartUseCase
 import com.example.productsStore.domain.usecase.GetProductsUseCase
 import com.example.productsStore.presentation.contract.ProductsListCommand
 import com.example.productsStore.presentation.contract.ProductsListEvent
-import com.example.productsStore.presentation.contract.ProductsListState
 import com.example.productsStore.presentation.mapper.toUiModel
+import com.example.productsStore.presentation.model.ProductUiModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -26,8 +27,13 @@ class ProductsListCommandsHandler @Inject constructor(
             when(command) {
                 is ProductsListCommand.FetchNextPage -> {
                     emit(ProductsListEvent.Internal.LoadingStarted)
-                    val newState = fetchNextPage(command.state)
-                    emit(ProductsListEvent.Internal.NextPageLoaded(newState))
+                    val result = fetchNextPage(command.skip, command.limit)
+                    emit(
+                        ProductsListEvent.Internal.NextPageLoaded(
+                            newProducts = result.newProducts,
+                            error = result.error
+                        )
+                    )
                 }
                 is ProductsListCommand.AddToCart -> {
                     addToCart(command.productId)
@@ -43,28 +49,22 @@ class ProductsListCommandsHandler @Inject constructor(
         }
     }
 
-    private suspend fun fetchNextPage(state: ProductsListState) : ProductsListState {
-        val skip = state.products.size
-        val limit = state.pageSize
-
+    private suspend fun fetchNextPage(skip: Int, limit: Int) : FetchingNextPageResult {
         val result = getProductsUseCase.invoke(skip = skip, limit = limit)
 
         return when(result) {
             is Resource.Success -> {
                 val newProducts = result.data.map { it.toUiModel() }
-                state.copy(
-                    products = state.products + newProducts,
-                    isLoadingGoing = false,
-                    isLastPageReached = newProducts.size < limit,
-                    error = null
-                )
+                FetchingNextPageResult(newProducts, null)
             }
             is Resource.Error -> {
-                state.copy(
-                    isLoadingGoing = false,
-                    error = result.error
-                )
+                FetchingNextPageResult(emptyList(), result.error)
             }
         }
     }
+
+    private data class FetchingNextPageResult(
+        val newProducts: List<ProductUiModel>,
+        val error: DomainError? = null
+    )
 }
