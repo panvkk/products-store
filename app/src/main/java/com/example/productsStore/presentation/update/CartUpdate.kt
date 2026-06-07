@@ -16,17 +16,15 @@ class CartUpdate : Update<CartState, CartEvent, CartCommand, CartNews> {
         when(event) {
             CartEvent.Ui.OnClearCart ->
                 Next(state = state, commands = listOf(CartCommand.ClearCart))
-            CartEvent.Ui.OnLoadCart ->
-                Next(state = state, commands = listOf(CartCommand.LoadCart))
             is CartEvent.Ui.OnNavigateToDetails ->
                 Next(state = state, news = listOf(NavigateToDetails(event.productId)))
             is CartEvent.Internal.CartLoaded ->
                 Next(state = event.newState)
             CartEvent.Internal.CartCleared ->
-                Next(state = CartState.Loading, commands = listOf(CartCommand.LoadCart), news = listOf(CartNews.ShowCartClearedToast))
+                Next(state = CartState.Loading, news = listOf(CartNews.ShowCartClearedToast))
             is CartEvent.Ui.OnUpdateNotifications ->
                 Next(state = state, commands = listOf(CartCommand.UpdateNotifications(event.productId, event.isNotificationsOn)))
             CartEvent.Internal.NotificationsUpdated ->
-                Next(state = state, commands = listOf(CartCommand.LoadCart)) // TODO сетевой запрос от изменения всего лишь одного элемента на UI, надо поправить
+                Next(state = state)
         }
 }

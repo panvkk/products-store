@@ -15,7 +15,7 @@ class GetCartUseCase @Inject constructor(
         return cartRepository.getCartedProducts().map { cartedProducts ->
             val cartItems = mutableListOf<CartItem>()
             cartedProducts.forEach {
-                val resourceProduct = getProductByIdUseCase(it.id)
+                val resourceProduct = getProductByIdUseCase(it.id)  // TODO переделать, чтобы вначале эмитился какой-нибудь Loading
                 if(resourceProduct is Resource.Success)
                     cartItems.add(CartItem(resourceProduct.data, it.isNotificationsOn, it.quantity))
                 else if(resourceProduct is Resource.Error)

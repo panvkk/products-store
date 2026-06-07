@@ -26,4 +26,6 @@
     <string name="cart_cleared_toast">Cart has been cleared</string>
     <string name="cart_size_title">Your cart has %1$d items</string>
     <string name="notifications_on_icon_content_description">Notifications for this product in cart enabled</string>
+    <string name="notification_channel_name">Products Store Notifications</string>
+    <string name="cart_notification_text">In your cart: %1$d pcs.</string>
 </resources>

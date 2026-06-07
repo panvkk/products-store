@@ -2,19 +2,20 @@ package com.example.productsStore.presentation.commandshandler
 
 import com.example.productsStore.core.Resource
 import com.example.productsStore.core.di.ApplicationScope
+import com.example.productsStore.domain.model.CartItem
 import com.example.productsStore.domain.usecase.ClearCartUseCase
 import com.example.productsStore.domain.usecase.GetCartUseCase
-import com.example.productsStore.domain.usecase.UpdateCartedProductNotificationsUseCase
+import com.example.productsStore.domain.usecase.UpdateNotificationStateUseCase
 import com.example.productsStore.presentation.contract.CartCommand
 import com.example.productsStore.presentation.contract.CartEvent
-import com.example.productsStore.presentation.contract.CartEvent.Internal.*
+import com.example.productsStore.presentation.contract.CartEvent.Internal.CartLoaded
+import com.example.productsStore.presentation.contract.CartEvent.Internal.NotificationsUpdated
 import com.example.productsStore.presentation.contract.CartState
 import com.example.productsStore.presentation.mapper.toUiModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import ru.tinkoff.kotea.core.CommandsFlowHandler
 import javax.inject.Inject
@@ -22,24 +23,28 @@ import javax.inject.Inject
 class CartCommandsHandler @Inject constructor(
     private val getCartUseCase: GetCartUseCase,
     private val clearCartUseCase: ClearCartUseCase,
-    private val updateCartedProductNotificationsUseCase: UpdateCartedProductNotificationsUseCase,
+    private val updateNotificationStateUseCase: UpdateNotificationStateUseCase,
     @ApplicationScope
     private val applicationScope: CoroutineScope
 ) : CommandsFlowHandler<CartCommand, CartEvent> {
-    override fun handle(commands: Flow<CartCommand>): Flow<CartEvent> = flow {
-        commands.collect { command ->
-            when(command) {
-                CartCommand.ClearCart -> {
-                    clearCart()
-                    emit(CartEvent.Internal.CartCleared)
-                }
-                CartCommand.LoadCart -> {
-                    val newState = loadCart()
-                    emit(CartLoaded(newState))
-                }
-                is CartCommand.UpdateNotifications -> {
-                    updateNotifications(command.productId, command.isNotificationsOn)
-                    emit(NotificationsUpdated)
+    override fun handle(commands: Flow<CartCommand>): Flow<CartEvent> {
+        return commands.flatMapMerge { command ->
+            flow {
+                when (command) {
+                    CartCommand.ClearCart -> {
+                        clearCart()
+                        emit(CartEvent.Internal.CartCleared)
+                    }
+                    CartCommand.LoadCart -> {
+                        getCartUseCase.invoke().collect { resource ->
+                            val newState = foldCartItems(resource)
+                            emit(CartLoaded(newState))
+                        }
+                    }
+                    is CartCommand.UpdateNotifications -> {
+                        updateNotifications(command.productId, command.isNotificationsOn)
+                        emit(NotificationsUpdated)
+                    }
                 }
             }
         }
@@ -47,24 +52,22 @@ class CartCommandsHandler @Inject constructor(
 
     private fun updateNotifications(productId: Int, isNotificationsOn: Boolean) {
         applicationScope.launch {
-            updateCartedProductNotificationsUseCase.invoke(productId, isNotificationsOn)
+            updateNotificationStateUseCase.invoke(productId, isNotificationsOn)
         }
     }
 
-    private suspend fun loadCart() : CartState =
-        getCartUseCase.invoke().map { resource ->
-            when(resource) {
-                is Resource.Success -> {
-                    val cartItems = resource.data.map { it.toUiModel() }
-                    var cartSize = 0
-                    cartItems.forEach { cartSize += it.quantity }
-                    CartState.Content(cartItems, cartSize)
-                }
-                is Resource.Error -> {
-                    CartState.Error(resource.error)
-                }
+    private fun foldCartItems(resource: Resource<List<CartItem>>) : CartState =
+        when(resource) {
+            is Resource.Success -> {
+                val cartItems = resource.data.map { it.toUiModel() }
+                var cartSize = 0
+                cartItems.forEach { cartSize += it.quantity }
+                CartState.Content(cartItems, cartSize)
             }
-        }.first()
+            is Resource.Error -> {
+                CartState.Error(resource.error)
+            }
+        }
 
     private fun clearCart() {
         applicationScope.launch {

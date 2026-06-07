@@ -15,7 +15,6 @@ sealed interface CartState {
 sealed interface CartEvent {
     sealed interface Ui : CartEvent {
         data object OnClearCart : Ui
-        data object OnLoadCart : Ui
         data class OnUpdateNotifications(val productId: Int, val isNotificationsOn: Boolean) : Ui
         data class OnNavigateToDetails(val productId: Int) : Ui
     }

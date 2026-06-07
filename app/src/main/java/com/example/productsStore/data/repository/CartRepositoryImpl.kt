@@ -1,5 +1,7 @@
 package com.example.productsStore.data.repository
 
+import com.example.productsStore.core.Resource
+import com.example.productsStore.core.domain.DomainError
 import com.example.productsStore.core.logger.Logger
 import com.example.productsStore.data.local.dao.ProductCartDao
 import com.example.productsStore.data.local.entity.CartedProductEntity
@@ -23,6 +25,18 @@ class CartRepositoryImpl @Inject constructor(
             .catch { e ->
                 logger.e(TAG, e.message ?: UNKNOWN_ERROR)
             }
+    }
+
+    override suspend fun getCartedProduct(id: Int): Resource<CartedProduct> {
+        return try {
+            val cartedProduct =
+                productCartDao.getCartedProduct(id) ?: return Resource.Error(DomainError.Other)
+            Resource.Success(cartedProduct.toDomain())
+        } catch (e: Exception) {
+            if(e is CancellationException) throw e
+            logger.e(TAG, e.message ?: UNKNOWN_ERROR)
+            Resource.Error(DomainError.Other)
+        }
     }
 
     override suspend fun addToCart(id: Int, title: String) {
