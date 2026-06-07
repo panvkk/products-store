@@ -19,7 +19,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.navDeepLink
 import androidx.navigation.toRoute
+import com.example.productsStore.core.PRODUCT_DETAILS_DEEP_LINK
 import com.example.productsStore.presentation.contract.ProductDetailsEvent
 import com.example.productsStore.presentation.ui.component.ProductsStoreTopBar
 import com.example.productsStore.presentation.ui.screen.CartScreen
@@ -116,7 +118,12 @@ fun App(navController: NavHostController) {
                 exitTransition = {
                     slideOutHorizontally(targetOffsetX = { it }, animationSpec = tween(200)) +
                             fadeOut(animationSpec = tween(200) )
-                }
+                },
+                deepLinks = listOf(
+                    navDeepLink<ProductDetailsDestination>(
+                        basePath = PRODUCT_DETAILS_DEEP_LINK
+                    )
+                )
             ) { backStackEntry ->
                 val args = backStackEntry.toRoute<ProductDetailsDestination>()
                 val productDetailsVM = hiltViewModel<ProductDetailsViewModel>()
