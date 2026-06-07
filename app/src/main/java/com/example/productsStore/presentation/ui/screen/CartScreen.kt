@@ -27,7 +27,7 @@ import com.example.productsStore.core.domain.DomainError
 import com.example.productsStore.presentation.contract.CartEvent
 import com.example.productsStore.presentation.contract.CartNews
 import com.example.productsStore.presentation.contract.CartState
-import com.example.productsStore.presentation.ui.component.CartItem
+import com.example.productsStore.presentation.ui.component.CartListItem
 import com.example.productsStore.presentation.ui.screen.testing.lazyListItemPosition
 import com.example.productsStore.presentation.ui.screen.testing.testtags.CartScreenTestTags.CART_ITEM
 import com.example.productsStore.presentation.ui.screen.testing.testtags.CartScreenTestTags.CART_ITEMS_LAZY_COLUMN
@@ -70,6 +70,14 @@ internal fun CartScreen(
             )
         },
         onClearCart = { store.dispatch(CartEvent.Ui.OnClearCart) },
+        onLongClickItem = { id, newIsNotificationsOn ->
+            store.dispatch(
+                CartEvent.Ui.OnUpdateNotifications(
+                    id,
+                    newIsNotificationsOn
+                )
+            )
+        },
     )
 }
 
@@ -77,14 +85,19 @@ internal fun CartScreen(
 internal fun CartScreenContent(
     modifier: Modifier = Modifier,
     onClickItem: (Int) -> Unit,
+    onLongClickItem: (Int, Boolean) -> Unit,
     onClearCart: () -> Unit,
     state: CartState
 ) {
     Box(
-        modifier = modifier.fillMaxSize().testTag(ROOT_TAG)
+        modifier = modifier
+            .fillMaxSize()
+            .testTag(ROOT_TAG)
     ) {
         LazyColumn(
-            modifier = Modifier.fillMaxWidth().testTag(CART_ITEMS_LAZY_COLUMN),
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag(CART_ITEMS_LAZY_COLUMN),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -106,12 +119,14 @@ internal fun CartScreenContent(
                         items = state.cartItems,
                         key = { _, item -> item.product.id },
                     ) { index, cartItem ->
-                        CartItem(
+                        CartListItem(
                             cartItem,
                             modifier = Modifier
                                 .lazyListItemPosition(index)
-                                .testTag(CART_ITEM)
-                        ) { onClickItem(cartItem.product.id) }
+                                .testTag(CART_ITEM),
+                            onClick = { onClickItem(cartItem.product.id) },
+                            onLongClick = { onLongClickItem(cartItem.product.id, !cartItem.isNotificationsOn) }
+                        )
                     }
                 }
 

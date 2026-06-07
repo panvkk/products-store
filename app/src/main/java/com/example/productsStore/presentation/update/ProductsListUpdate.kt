@@ -43,7 +43,7 @@ class ProductsListUpdate : Update<ProductsListState, ProductsListEvent, Products
                 )
             }
             is ProductsListEvent.Ui.OnAddToCart ->
-                Next(state = state, commands = listOf(AddToCart(event.productId)))
+                Next(state = state, commands = listOf(AddToCart(event.productId, event.title)))
             is ProductsListEvent.Ui.OnNavigateDetails ->
                 Next(state = state, news = listOf(NavigateToDetails(event.productId)))
             is ProductsListEvent.Internal.NextPageLoaded ->

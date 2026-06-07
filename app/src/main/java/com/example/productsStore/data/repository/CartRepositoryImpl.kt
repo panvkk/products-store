@@ -25,11 +25,36 @@ class CartRepositoryImpl @Inject constructor(
             }
     }
 
-    override suspend fun addToCart(id: Int) {
+    override suspend fun addToCart(id: Int, title: String) {
         try {
-            val currentQuantityInCart = productCartDao.getProductQuantityInCart(id) ?: 0
+            val currentStateInCart = productCartDao.getCartedProduct(id)
+
+            val quantity = currentStateInCart?.quantity?.inc() ?: 1
+            val isNotificationOn = currentStateInCart?.isNotificationsOn ?: false
             productCartDao.putProduct(
-                CartedProductEntity(id, currentQuantityInCart + 1)
+                CartedProductEntity(
+                    productId = id,
+                    productTitle = title,
+                    isNotificationsOn = isNotificationOn,
+                    quantity = quantity
+                )
+            )
+        } catch (e: Exception) {
+            if(e is CancellationException) throw e
+            logger.e(TAG, e.message ?: UNKNOWN_ERROR)
+        }
+    }
+
+    override suspend fun updateIsNotificationsOn(
+        id: Int,
+        isNotificationsOn: Boolean
+    ) {
+        try {
+            val currentStateInCart = productCartDao.getCartedProduct(id) ?: return
+            productCartDao.putProduct(
+                currentStateInCart.copy(
+                    isNotificationsOn = isNotificationsOn
+                )
             )
         } catch (e: Exception) {
             if(e is CancellationException) throw e

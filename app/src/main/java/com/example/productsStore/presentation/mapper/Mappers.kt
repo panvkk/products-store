@@ -11,4 +11,4 @@ import com.example.productsStore.presentation.model.ProductUiModel
 fun Product.toUiModel() = ProductUiModel(id, productTitle, price, brand)
 
 fun ProductDetails.toUiModel() = ProductDetailsUiModel(title, description, imageUrl?.toUri(), rating, price, weight, availabilityStatus, warrantyInformation, isIrrelevantInfo)
-fun CartItem.toUiModel() = CartItemUiModel(product.toUiModel(), quantity)
+fun CartItem.toUiModel() = CartItemUiModel(product.toUiModel(), isNotificationsOn, quantity)

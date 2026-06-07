@@ -37,16 +37,16 @@ class ProductsListCommandsHandler @Inject constructor(
                     )
                 }
                 is ProductsListCommand.AddToCart -> {
-                    addToCart(command.productId)
+                    addToCart(command.productId, command.productTitle)
                     emit(ProductsListEvent.Internal.AddedToCart)
                 }
             }
         }
     }
 
-    private fun addToCart(productId: Int) {
+    private fun addToCart(productId: Int, productTitle: String) {
         applicationScope.launch {
-            addToCartUseCase.invoke(productId)
+            addToCartUseCase.invoke(productId, productTitle)
         }
     }
 

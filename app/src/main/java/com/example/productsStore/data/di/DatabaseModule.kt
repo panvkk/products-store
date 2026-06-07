@@ -26,6 +26,7 @@ object DatabaseModule {
             ProductsStoreDatabase.MIGRATION_1_2,
             ProductsStoreDatabase.MIGRATION_2_3
         )
+        .fallbackToDestructiveMigration()
         .build()
 
     @Provides

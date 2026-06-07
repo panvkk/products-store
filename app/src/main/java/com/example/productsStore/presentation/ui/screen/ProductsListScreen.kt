@@ -74,7 +74,7 @@ fun ProductsListScreen(
             ) { index, product ->
                 ProductCard(
                     product = product,
-                    onAddToCart = { store.dispatch(ProductsListEvent.Ui.OnAddToCart(product.id)) },
+                    onAddToCart = { store.dispatch(ProductsListEvent.Ui.OnAddToCart(product.id, product.productTitle)) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = dimensionResource(R.dimen.small_padding))

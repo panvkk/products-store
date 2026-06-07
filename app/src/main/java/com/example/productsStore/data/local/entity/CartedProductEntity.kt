@@ -6,8 +6,8 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "carted_products_table")
 data class CartedProductEntity(
-    @PrimaryKey(false)
-    @ColumnInfo("product_id")
-    val productId: Int,
-    val quantity: Int
+    @PrimaryKey @ColumnInfo("product_id") val productId: Int,
+    @ColumnInfo("product_title") val productTitle: String,
+    @ColumnInfo("is_notifications_on") val isNotificationsOn: Boolean,
+    @ColumnInfo("quantity") val quantity: Int
 )

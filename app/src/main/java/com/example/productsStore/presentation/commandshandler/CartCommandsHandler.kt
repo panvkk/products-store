@@ -4,8 +4,10 @@ import com.example.productsStore.core.Resource
 import com.example.productsStore.core.di.ApplicationScope
 import com.example.productsStore.domain.usecase.ClearCartUseCase
 import com.example.productsStore.domain.usecase.GetCartUseCase
+import com.example.productsStore.domain.usecase.UpdateCartedProductNotificationsUseCase
 import com.example.productsStore.presentation.contract.CartCommand
 import com.example.productsStore.presentation.contract.CartEvent
+import com.example.productsStore.presentation.contract.CartEvent.Internal.*
 import com.example.productsStore.presentation.contract.CartState
 import com.example.productsStore.presentation.mapper.toUiModel
 import kotlinx.coroutines.CoroutineScope
@@ -20,6 +22,7 @@ import javax.inject.Inject
 class CartCommandsHandler @Inject constructor(
     private val getCartUseCase: GetCartUseCase,
     private val clearCartUseCase: ClearCartUseCase,
+    private val updateCartedProductNotificationsUseCase: UpdateCartedProductNotificationsUseCase,
     @ApplicationScope
     private val applicationScope: CoroutineScope
 ) : CommandsFlowHandler<CartCommand, CartEvent> {
@@ -32,9 +35,19 @@ class CartCommandsHandler @Inject constructor(
                 }
                 CartCommand.LoadCart -> {
                     val newState = loadCart()
-                    emit(CartEvent.Internal.CartLoaded(newState))
+                    emit(CartLoaded(newState))
+                }
+                is CartCommand.UpdateNotifications -> {
+                    updateNotifications(command.productId, command.isNotificationsOn)
+                    emit(NotificationsUpdated)
                 }
             }
+        }
+    }
+
+    private fun updateNotifications(productId: Int, isNotificationsOn: Boolean) {
+        applicationScope.launch {
+            updateCartedProductNotificationsUseCase.invoke(productId, isNotificationsOn)
         }
     }
 

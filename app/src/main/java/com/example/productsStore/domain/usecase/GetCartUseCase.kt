@@ -17,7 +17,7 @@ class GetCartUseCase @Inject constructor(
             cartedProducts.forEach {
                 val resourceProduct = getProductByIdUseCase(it.id)
                 if(resourceProduct is Resource.Success)
-                    cartItems.add(CartItem(resourceProduct.data, it.quantity))
+                    cartItems.add(CartItem(resourceProduct.data, it.isNotificationsOn, it.quantity))
                 else if(resourceProduct is Resource.Error)
                     Resource.Error(resourceProduct.error)
             }
