@@ -29,4 +29,5 @@
     <string name="notification_channel_name">Products Store Notifications</string>
     <string name="cart_notification_text">In your cart: %1$d pcs.</string>
     <string name="go_to_details">Go to details</string>
+    <string name="you_re_offline">You\'re offline</string>
 </resources>

@@ -8,12 +8,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.productsStore.presentation.background.receiver.NetworkStatusReceiver
 import com.example.productsStore.presentation.ui.theme.ProductsStoreTheme
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
+    @Inject
+    lateinit var networkReceiver: NetworkStatusReceiver
     private var navController: NavHostController? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,5 +39,15 @@ class MainActivity : AppCompatActivity() {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         navController?.handleDeepLink(intent)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        networkReceiver.register()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        networkReceiver.unregister()
     }
 }
