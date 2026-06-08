@@ -15,7 +15,7 @@
 
         override fun schedule(productId: Int) {
             val pendingIntent = CartNotificationsReceiver.getPendingIntent(appContext, productId)
-            val triggerTime = SystemClock.elapsedRealtime() + CART_NOTIFICATIONS_INTERVAL // TODO чето сделать с system.currentTime() , вроде так не надо делать
+            val triggerTime = SystemClock.elapsedRealtime() + CART_NOTIFICATIONS_INTERVAL
             alarmManager.setRepeating(
                 AlarmManager.ELAPSED_REALTIME_WAKEUP,
                 triggerTime,
@@ -32,7 +32,6 @@
         }
 
         companion object {
-//            const val CART_NOTIFICATIONS_INTERVAL = 60 * 60 * 1000L
-            const val CART_NOTIFICATIONS_INTERVAL = 10_000L
+            const val CART_NOTIFICATIONS_INTERVAL = 60 * 60 * 1000L
         }
     }
