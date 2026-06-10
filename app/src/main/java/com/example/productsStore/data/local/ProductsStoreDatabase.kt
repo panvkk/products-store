@@ -11,7 +11,7 @@ import com.example.productsStore.data.local.entity.ProductDetailsEntity
 
 @Database(
     entities = [ProductDetailsEntity::class, CartedProductEntity::class],
-    version = 4,
+    version = 5,
     autoMigrations = []
 ) abstract class ProductsStoreDatabase : RoomDatabase() {
     abstract fun productDetailsCacheDao() : ProductDetailsCacheDao

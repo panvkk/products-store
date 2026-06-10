@@ -3,10 +3,11 @@ package com.example.productsStore.presentation.commandshandler
 import com.example.productsStore.core.Resource
 import com.example.productsStore.core.di.ApplicationScope
 import com.example.productsStore.core.domain.DomainError
-import com.example.productsStore.domain.usecase.AddToCartUseCase
+import com.example.productsStore.domain.usecase.cart.AddToCartUseCase
 import com.example.productsStore.domain.usecase.GetProductsUseCase
 import com.example.productsStore.presentation.contract.ProductsListCommand
 import com.example.productsStore.presentation.contract.ProductsListEvent
+import com.example.productsStore.presentation.mapper.toDomain
 import com.example.productsStore.presentation.mapper.toUiModel
 import com.example.productsStore.presentation.model.ProductUiModel
 import kotlinx.coroutines.CoroutineScope
@@ -37,16 +38,16 @@ class ProductsListCommandsHandler @Inject constructor(
                     )
                 }
                 is ProductsListCommand.AddToCart -> {
-                    addToCart(command.productId, command.productTitle)
+                    addToCart(command.productUiModel)
                     emit(ProductsListEvent.Internal.AddedToCart)
                 }
             }
         }
     }
 
-    private fun addToCart(productId: Int, productTitle: String) {
+    private fun addToCart(productUiModel: ProductUiModel) {
         applicationScope.launch {
-            addToCartUseCase.invoke(productId, productTitle)
+            addToCartUseCase.invoke(productUiModel.toDomain())
         }
     }
 

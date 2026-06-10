@@ -14,7 +14,7 @@ data class ProductsListState(
 sealed interface ProductsListEvent {
     sealed interface Ui : ProductsListEvent {
         data class OnSetupPageSize(val pageSize: Int) : Ui
-        data class OnAddToCart(val productId: Int, val title: String) : Ui
+        data class OnAddToCart(val productUiModel: ProductUiModel) : Ui
         data object OnLoadNextPage : Ui
         data class OnNavigateDetails(val productId: Int) : Ui
     }
@@ -31,7 +31,7 @@ sealed interface ProductsListEvent {
 
 sealed interface ProductsListCommand {
     data class FetchNextPage(val skip: Int, val limit: Int) : ProductsListCommand
-    data class AddToCart(val productId: Int, val productTitle: String) : ProductsListCommand
+    data class AddToCart(val productUiModel: ProductUiModel) : ProductsListCommand
 }
 
 sealed interface ProductsListNews {

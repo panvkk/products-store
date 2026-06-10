@@ -1,6 +1,7 @@
-package com.example.productsStore.domain.usecase
+package com.example.productsStore.domain.usecase.cart
 
 import com.example.productsStore.domain.repository.CartRepository
+import com.example.productsStore.domain.usecase.RemoveAllNotificationsUseCase
 import javax.inject.Inject
 
 class ClearCartUseCase @Inject constructor(

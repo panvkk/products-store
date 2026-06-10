@@ -4,9 +4,8 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import com.example.productsStore.core.Resource
 import com.example.productsStore.core.di.ApplicationScope
-import com.example.productsStore.domain.usecase.GetCartUseCase
+import com.example.productsStore.domain.usecase.cart.GetCartUseCase
 import com.example.productsStore.presentation.background.manager.CartAlarmManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -33,15 +32,10 @@ class RestoreAlarmReceiver : BroadcastReceiver() {
         val pendingResult = goAsync()
         scope.launch {
             try {
-                val resource = getCartUseCase.invoke().first()
-                when(resource) {
-                    is Resource.Success -> {
-                        val cartItems = resource.data.filter { it.isNotificationsOn }
-                        cartItems.forEach { cartItem ->
-                            cartAlarmManager.schedule(cartItem.product.id)
-                        }
-                    }
-                    else -> {  }
+                val cartItems = getCartUseCase.invoke().first()
+                val itemsWithNotifications = cartItems.filter { it.isNotificationsOn }
+                itemsWithNotifications.forEach { item ->
+                    cartAlarmManager.schedule(item.product.id)
                 }
             } catch (e: Exception) {
                 Log.e(TAG, e.message ?: "Unknown error.")

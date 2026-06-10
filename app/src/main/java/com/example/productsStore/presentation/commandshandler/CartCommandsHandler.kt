@@ -1,11 +1,10 @@
 package com.example.productsStore.presentation.commandshandler
 
-import com.example.productsStore.core.Resource
 import com.example.productsStore.core.di.ApplicationScope
 import com.example.productsStore.domain.model.CartItem
-import com.example.productsStore.domain.usecase.ClearCartUseCase
-import com.example.productsStore.domain.usecase.GetCartUseCase
 import com.example.productsStore.domain.usecase.UpdateNotificationStateUseCase
+import com.example.productsStore.domain.usecase.cart.ClearCartUseCase
+import com.example.productsStore.domain.usecase.cart.GetCartUseCase
 import com.example.productsStore.presentation.contract.CartCommand
 import com.example.productsStore.presentation.contract.CartEvent
 import com.example.productsStore.presentation.contract.CartEvent.Internal.CartLoaded
@@ -37,7 +36,7 @@ class CartCommandsHandler @Inject constructor(
                     }
                     CartCommand.LoadCart -> {
                         getCartUseCase.invoke().collect { resource ->
-                            val newState = foldCartItems(resource)
+                            val newState = getCartState(resource)
                             emit(CartLoaded(newState))
                         }
                     }
@@ -56,18 +55,12 @@ class CartCommandsHandler @Inject constructor(
         }
     }
 
-    private fun foldCartItems(resource: Resource<List<CartItem>>) : CartState =
-        when(resource) {
-            is Resource.Success -> {
-                val cartItems = resource.data.map { it.toUiModel() }
-                var cartSize = 0
-                cartItems.forEach { cartSize += it.quantity }
-                CartState.Content(cartItems, cartSize)
-            }
-            is Resource.Error -> {
-                CartState.Error(resource.error)
-            }
-        }
+    private fun getCartState(cartItems: List<CartItem>) : CartState {
+        val cartItems = cartItems.map { it.toUiModel() }
+        var cartSize = 0
+        cartItems.forEach { cartSize += it.quantity }
+        return CartState.Content(cartItems, cartSize)
+    }
 
     private fun clearCart() {
         applicationScope.launch {

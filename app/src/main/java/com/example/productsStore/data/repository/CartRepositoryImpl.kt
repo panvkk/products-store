@@ -4,9 +4,10 @@ import com.example.productsStore.core.Resource
 import com.example.productsStore.core.domain.DomainError
 import com.example.productsStore.core.logger.Logger
 import com.example.productsStore.data.local.dao.ProductCartDao
-import com.example.productsStore.data.local.entity.CartedProductEntity
+import com.example.productsStore.data.mapper.toCartEntity
 import com.example.productsStore.data.mapper.toDomain
-import com.example.productsStore.domain.model.CartedProduct
+import com.example.productsStore.domain.model.CartItem
+import com.example.productsStore.domain.model.Product
 import com.example.productsStore.domain.repository.CartRepository
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.Flow
@@ -19,7 +20,7 @@ class CartRepositoryImpl @Inject constructor(
     private val logger: Logger
 ) : CartRepository {
 
-    override fun getCartedProducts() : Flow<List<CartedProduct>>{
+    override fun getCartedProducts() : Flow<List<CartItem>> {
         return productCartDao.getCartedProducts()
             .map { cartedProductEntities -> cartedProductEntities.map { it.toDomain() } }
             .catch { e ->
@@ -41,18 +42,11 @@ class CartRepositoryImpl @Inject constructor(
 
     override suspend fun addToCart(id: Int, title: String) {
         try {
-            val currentStateInCart = productCartDao.getCartedProduct(id)
+            val currentStateInCart = productCartDao.getCartedProduct(product.id)
 
             val quantity = currentStateInCart?.quantity?.inc() ?: 1
-            val isNotificationOn = currentStateInCart?.isNotificationsOn ?: false
-            productCartDao.putProduct(
-                CartedProductEntity(
-                    productId = id,
-                    productTitle = title,
-                    isNotificationsOn = isNotificationOn,
-                    quantity = quantity
-                )
-            )
+            val isNotificationsOn = currentStateInCart?.isNotificationsOn ?: false
+            productCartDao.putProduct(product.toCartEntity(quantity, isNotificationsOn))
         } catch (e: Exception) {
             if(e is CancellationException) throw e
             logger.e(TAG, e.message ?: UNKNOWN_ERROR)

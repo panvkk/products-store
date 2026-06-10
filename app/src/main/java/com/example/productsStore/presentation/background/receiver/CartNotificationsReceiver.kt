@@ -6,7 +6,7 @@ import android.content.Context
 import android.content.Intent
 import com.example.productsStore.core.Resource
 import com.example.productsStore.core.di.ApplicationScope
-import com.example.productsStore.domain.usecase.GetCartedProductUseCase
+import com.example.productsStore.domain.usecase.cart.GetCartedProductUseCase
 import com.example.productsStore.presentation.background.notification.CartNotifier
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -35,8 +35,8 @@ class CartNotificationsReceiver : BroadcastReceiver() {
 
                 if(cartedProduct is Resource.Success && cartedProduct.data.isNotificationsOn) {
                     notifier.notifyCartedProduct(
-                        cartedProduct.data.id,
-                        cartedProduct.data.title,
+                        cartedProduct.data.product.id,
+                        cartedProduct.data.product.title,
                         cartedProduct.data.quantity
                     )
                 }
