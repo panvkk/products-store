@@ -41,7 +41,8 @@ import com.example.productsstrore.R
 internal fun CartScreen(
     modifier: Modifier = Modifier,
     navigateToDetails: (Int) -> Unit,
-    viewModel: CartViewModel
+    viewModel: CartViewModel,
+    showCartHint: () -> Unit
 ) {
     val context = LocalContext.current
     val store = viewModel.store
@@ -58,6 +59,7 @@ internal fun CartScreen(
                         Toast.LENGTH_SHORT
                     ).show()
                 }
+                is CartNews.ShowCartHintDialog -> { showCartHint() }
             }
         }
     }
@@ -77,7 +79,7 @@ internal fun CartScreen(
                     newIsNotificationsOn
                 )
             )
-        },
+        }
     )
 }
 
@@ -165,6 +167,5 @@ internal fun CartScreenContent(
                 )
             }
         }
-
     }
 }

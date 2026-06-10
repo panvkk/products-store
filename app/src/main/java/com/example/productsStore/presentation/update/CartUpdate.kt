@@ -1,6 +1,7 @@
 package com.example.productsStore.presentation.update
 
 import com.example.productsStore.presentation.contract.CartCommand
+import com.example.productsStore.presentation.contract.CartCommand.*
 import com.example.productsStore.presentation.contract.CartEvent
 import com.example.productsStore.presentation.contract.CartNews
 import com.example.productsStore.presentation.contract.CartNews.*
@@ -21,10 +22,12 @@ class CartUpdate : Update<CartState, CartEvent, CartCommand, CartNews> {
             is CartEvent.Internal.CartLoaded ->
                 Next(state = event.newState)
             CartEvent.Internal.CartCleared ->
-                Next(state = CartState.Loading, news = listOf(CartNews.ShowCartClearedToast))
+                Next(state = CartState.Loading, news = listOf(ShowCartClearedToast))
             is CartEvent.Ui.OnUpdateNotifications ->
-                Next(state = state, commands = listOf(CartCommand.UpdateNotifications(event.productId, event.isNotificationsOn)))
+                Next(state = state, commands = listOf(UpdateNotifications(event.productId, event.isNotificationsOn)))
             CartEvent.Internal.NotificationsUpdated ->
                 Next(state = state)
+            CartEvent.Internal.DisplayCartHint ->
+                Next(state = state, news = listOf(ShowCartHintDialog))
         }
 }

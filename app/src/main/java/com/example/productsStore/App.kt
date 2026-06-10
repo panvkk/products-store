@@ -12,6 +12,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -27,6 +30,7 @@ import androidx.navigation.navDeepLink
 import androidx.navigation.toRoute
 import com.example.productsStore.core.PRODUCT_DETAILS_DEEP_LINK
 import com.example.productsStore.presentation.contract.ProductDetailsEvent
+import com.example.productsStore.presentation.ui.component.CartHintDialog
 import com.example.productsStore.presentation.ui.component.NoInternetIndicator
 import com.example.productsStore.presentation.ui.component.ProductsStoreTopBar
 import com.example.productsStore.presentation.ui.screen.CartScreen
@@ -44,55 +48,13 @@ import com.example.productsstrore.R
 
 @Composable
 fun App(navController: NavHostController) {
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentDestination = navBackStackEntry?.destination
-
     val globalViewModel = hiltViewModel<GlobalViewModel>()
     val isOnline by globalViewModel.isOnline.collectAsStateWithLifecycle()
+    var shouldDisplayCartHint by remember { mutableStateOf(false) }
 
-    val navigateToCart = {
-        navController.navigate(CartDestination) {
-            popUpTo(ProductsListDestination) { inclusive = false }
-            launchSingleTop = true
-        }
-    }
     Scaffold(
         topBar = {
-            when {
-                currentDestination?.hasRoute<ProductsListDestination>() ?: false -> {
-                    ProductsStoreTopBar(
-                        title = stringResource(R.string.products_list_top_bar),
-                        canNavigateUp = false,
-                        canNavigateToCart = true,
-                        navigateToCart = navigateToCart
-                    )
-                }
-                currentDestination?.hasRoute<ProductDetailsDestination>() ?: false -> {
-                    ProductsStoreTopBar(
-                        title = stringResource(R.string.product_details_top_bar),
-                        canNavigateUp = true,
-                        canNavigateToCart = true,
-                        navigateUp = { navController.popBackStack() },
-                        navigateToCart = navigateToCart
-                    )
-                }
-                currentDestination?.hasRoute<CartDestination>() ?: false -> {
-                    ProductsStoreTopBar(
-                        title = stringResource(R.string.cart_top_bar),
-                        canNavigateUp = true,
-                        canNavigateToCart = false,
-                        navigateUp = { navController.popBackStack() }
-                    )
-                }
-                else -> {
-                    ProductsStoreTopBar(
-                        title = stringResource(R.string.default_top_bar),
-                        canNavigateUp = false,
-                        canNavigateToCart = true,
-                        navigateToCart = navigateToCart
-                    )
-                }
-            }
+            ProductsStoreTopBar(navController, showCartHint = { shouldDisplayCartHint = true })
         }
     ) { innerPadding ->
         Box(modifier = Modifier.fillMaxSize()) {
@@ -162,7 +124,8 @@ fun App(navController: NavHostController) {
                         navigateToDetails = { id: Int ->
                             navController.navigate(ProductDetailsDestination(id))
                         },
-                        viewModel = cartViewModel
+                        viewModel = cartViewModel,
+                        showCartHint = { shouldDisplayCartHint = true }
                     )
                 }
             }
@@ -172,6 +135,9 @@ fun App(navController: NavHostController) {
                         .padding(bottom = innerPadding.calculateBottomPadding())
                 )
             }
+        }
+        if(shouldDisplayCartHint) {
+            CartHintDialog(onDismiss = { shouldDisplayCartHint = false })
         }
     }
 }

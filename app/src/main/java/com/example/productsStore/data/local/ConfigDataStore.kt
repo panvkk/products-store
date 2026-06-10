@@ -8,6 +8,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.preferencesDataStore
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -20,10 +21,15 @@ class ConfigDataStore @Inject constructor(
 ) {
 
     val isOnlineFlow: Flow<Boolean> = appContext.dataStore.data
-        .map { preferences ->
-            preferences[isOnlineKey] ?: true
-        }
+        .map { preferences -> preferences[isOnlineKey] ?: true }
 
+    suspend fun shouldDisplayCartHint() =
+        appContext.dataStore.data.first()[shouldDisplayCartHintKey] ?: true
+    suspend fun updateShouldDisplayCartHint() {
+        appContext.dataStore.edit { preferences ->
+            preferences[shouldDisplayCartHintKey] = false
+        }
+    }
     suspend fun updateOnlineStatus(isOnline: Boolean) {
         appContext.dataStore.edit { preferences ->
             preferences[isOnlineKey] = isOnline
@@ -31,5 +37,5 @@ class ConfigDataStore @Inject constructor(
     }
 
     private val isOnlineKey = booleanPreferencesKey("is_online")
-
+    private val shouldDisplayCartHintKey = booleanPreferencesKey("should_display_cart_hint")
 }

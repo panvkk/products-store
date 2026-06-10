@@ -2,7 +2,7 @@ package com.example.productsStore.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.productsStore.domain.usecase.ObserveNetworkStatusUseCase
+import com.example.productsStore.domain.usecase.config.ObserveNetworkStatusUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn

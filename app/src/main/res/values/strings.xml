@@ -30,4 +30,8 @@
     <string name="cart_notification_text">In your cart: %1$d pcs.</string>
     <string name="go_to_details">Go to details</string>
     <string name="you_re_offline">You\'re offline</string>
+    <string name="cart_hint_title">Products cart</string>
+    <string name="cart_hint_text">This is your cart. Keep track of products you like and long-press any item to set up custom notifications.</string>
+    <string name="cart_hint_confirm_button">OK</string>
+    <string name="info_icon_description">Show cart hint</string>
 </resources>

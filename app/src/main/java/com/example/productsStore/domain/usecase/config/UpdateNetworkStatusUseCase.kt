@@ -1,7 +1,6 @@
-package com.example.productsStore.domain.usecase
+package com.example.productsStore.domain.usecase.config
 
 import com.example.productsStore.data.local.ConfigDataStore
-import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class UpdateNetworkStatusUseCase @Inject constructor(

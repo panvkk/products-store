@@ -5,6 +5,8 @@ import com.example.productsStore.domain.model.CartItem
 import com.example.productsStore.domain.usecase.UpdateNotificationStateUseCase
 import com.example.productsStore.domain.usecase.cart.ClearCartUseCase
 import com.example.productsStore.domain.usecase.cart.GetCartUseCase
+import com.example.productsStore.domain.usecase.config.ShouldDisplayCartHintUseCase
+import com.example.productsStore.domain.usecase.config.UpdateShouldDisplayCartHintUseCase
 import com.example.productsStore.presentation.contract.CartCommand
 import com.example.productsStore.presentation.contract.CartEvent
 import com.example.productsStore.presentation.contract.CartEvent.Internal.CartLoaded
@@ -23,6 +25,8 @@ class CartCommandsHandler @Inject constructor(
     private val getCartUseCase: GetCartUseCase,
     private val clearCartUseCase: ClearCartUseCase,
     private val updateNotificationStateUseCase: UpdateNotificationStateUseCase,
+    private val updateShouldDisplayCartHintUseCase: UpdateShouldDisplayCartHintUseCase,
+    private val shouldDisplayCartHintUseCase: ShouldDisplayCartHintUseCase,
     @ApplicationScope
     private val applicationScope: CoroutineScope
 ) : CommandsFlowHandler<CartCommand, CartEvent> {
@@ -38,6 +42,13 @@ class CartCommandsHandler @Inject constructor(
                         getCartUseCase.invoke().collect { resource ->
                             val newState = getCartState(resource)
                             emit(CartLoaded(newState))
+                        }
+                    }
+                    CartCommand.TryShowCartHint -> {
+                        val shouldShow = shouldDisplayCartHintUseCase.invoke()
+                        if(shouldShow) {
+                            updateShouldDisplayCartHintUseCase.invoke()
+                            emit(CartEvent.Internal.DisplayCartHint)
                         }
                     }
                     is CartCommand.UpdateNotifications -> {

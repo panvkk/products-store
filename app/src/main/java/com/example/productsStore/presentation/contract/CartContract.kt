@@ -22,16 +22,19 @@ sealed interface CartEvent {
         data class CartLoaded(val newState: CartState) : Internal
         data object CartCleared : Internal
         data object NotificationsUpdated : Internal
+        data object DisplayCartHint : Internal
     }
 }
 
 sealed interface CartCommand {
     data object ClearCart : CartCommand
     data object LoadCart : CartCommand
+    data object TryShowCartHint : CartCommand
     data class UpdateNotifications(val productId: Int, val isNotificationsOn: Boolean) : CartCommand
 }
 
 sealed interface CartNews {
     data class NavigateToDetails(val productId: Int) : CartNews
     data object ShowCartClearedToast : CartNews
+    data object ShowCartHintDialog : CartNews
 }

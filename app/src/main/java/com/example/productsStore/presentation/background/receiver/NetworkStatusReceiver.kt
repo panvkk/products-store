@@ -7,7 +7,7 @@ import android.content.IntentFilter
 import android.net.ConnectivityManager
 import androidx.core.content.ContextCompat
 import com.example.productsStore.core.di.ApplicationScope
-import com.example.productsStore.domain.usecase.UpdateNetworkStatusUseCase
+import com.example.productsStore.domain.usecase.config.UpdateNetworkStatusUseCase
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope

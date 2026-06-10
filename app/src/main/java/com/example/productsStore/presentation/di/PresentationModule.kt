@@ -67,7 +67,7 @@ object PresentationModule {
     ) : Store<CartState, CartEvent.Ui, CartNews> =
         KoteaStore(
             initialState = CartState.Loading,
-            initialCommands = listOf(CartCommand.LoadCart),
+            initialCommands = listOf(CartCommand.LoadCart, CartCommand.TryShowCartHint),
             commandsFlowHandlers = listOf(cartCommandsHandler),
             update = CartUpdate()
         )
