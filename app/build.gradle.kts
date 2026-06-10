@@ -18,7 +18,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.productsstrore"
+        applicationId = "com.kpanov.productsstrore"
         minSdk = 28
         targetSdk = 36
         versionCode = 1
