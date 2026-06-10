@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -19,14 +20,18 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.productsStore.core.PLACEHOLDERS_COUNT_IN_LIST
 import com.example.productsStore.core.domain.DomainError
 import com.example.productsStore.presentation.contract.ProductsListEvent
 import com.example.productsStore.presentation.contract.ProductsListNews
 import com.example.productsStore.presentation.contract.ProductsListState
 import com.example.productsStore.presentation.ui.component.ErrorPage
 import com.example.productsStore.presentation.ui.component.ProductCard
+import com.example.productsStore.presentation.ui.component.ProductCardPlaceholder
+import com.example.productsStore.presentation.ui.component.shimmer
 import com.example.productsStore.presentation.viewmodel.ProductsListViewModel
 import com.example.productsstrore.R
+import kotlin.collections.listOf
 
 @Composable
 fun ProductsListScreen(
@@ -87,10 +92,16 @@ fun ProductsListScreen(
                     store.dispatch(ProductsListEvent.Ui.OnLoadNextPage)
                 }
             }
-            item {
-                if(state.isLoadingGoing) {
-                    Text(stringResource(R.string.loading_title))
-                } else if(state.error != null) {
+            if(state.isLoadingGoing) {
+                items(PLACEHOLDERS_COUNT_IN_LIST) {
+                    ProductCardPlaceholder(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = dimensionResource(R.dimen.small_padding))
+                    )
+                }
+            } else if(state.error != null) {
+                item {
                     val errorMessage = when(state.error) {
                         is DomainError.NetworkIssue -> stringResource(R.string.check_your_internet_connection)
                         is DomainError.ServerIssue -> stringResource(R.string.please_try_again_later)

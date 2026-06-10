@@ -11,6 +11,7 @@
     <dimen name="default_border_width">1dp</dimen>
     <dimen name="product_image_height">256dp</dimen>
     <dimen name="clear_cart_button_height">48dp</dimen>
+    <dimen name="shimmer_corner_radius">8dp</dimen>
 <!-- Paddings -->
     <dimen name="extra_small_padding">4dp</dimen>
     <dimen name="small_padding">8dp</dimen>

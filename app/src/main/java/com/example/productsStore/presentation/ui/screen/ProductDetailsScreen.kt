@@ -39,6 +39,7 @@ import com.example.productsStore.presentation.contract.ProductDetailsEvent
 import com.example.productsStore.presentation.contract.ProductDetailsScreenState
 import com.example.productsStore.presentation.contract.ProductDetailsState
 import com.example.productsStore.presentation.ui.component.ErrorPage
+import com.example.productsStore.presentation.ui.component.ProductDetailsScreenPlaceholder
 import com.example.productsStore.presentation.ui.component.ProductInfoRow
 import com.example.productsStore.presentation.ui.screen.testing.testtags.ProductDetailsTestTags.PRODUCT_IMAGE
 import com.example.productsStore.presentation.ui.screen.testing.testtags.ProductDetailsTestTags.ROOT_TAG
@@ -86,7 +87,7 @@ fun ProductDetailsScreenContent(
                 if(currentState.productDetails.mainImageUri != null) {
                     GlideImage(
                         model = currentState.productDetails.mainImageUri,
-                        loading = placeholder(painterResource(R.drawable.loading_image)),
+                        loading = placeholder(painterResource(R.drawable.loading_image_2)),
                         failure = placeholder(painterResource(R.drawable.no_image_available)),
                         contentDescription = stringResource(R.string.product_image_content_description),
                         modifier = Modifier
@@ -192,7 +193,7 @@ fun ProductDetailsScreenContent(
                 )
             }
             is ProductDetailsScreenState.Loading -> {
-                Text(stringResource(R.string.loading_title))
+                ProductDetailsScreenPlaceholder()
             }
         }
     }
