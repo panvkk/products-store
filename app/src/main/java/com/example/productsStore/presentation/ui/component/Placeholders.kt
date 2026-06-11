@@ -7,39 +7,31 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.rememberTextMeasurer
-import androidx.compose.ui.text.style.TextOverflow
-import com.bumptech.glide.integration.compose.GlideImage
-import com.bumptech.glide.integration.compose.placeholder
 import com.example.productsStore.core.PRODUCT_AVAILABILITY_PLACEHOLDER
 import com.example.productsStore.core.PRODUCT_BRAND_PLACEHOLDER
 import com.example.productsStore.core.PRODUCT_PRICE_PLACEHOLDER
@@ -47,9 +39,6 @@ import com.example.productsStore.core.PRODUCT_RATING_PLACEHOLDER
 import com.example.productsStore.core.PRODUCT_TITLE_PLACEHOLDER
 import com.example.productsStore.core.PRODUCT_WARRANTY_PLACEHOLDER
 import com.example.productsStore.core.PRODUCT_WEIGHT_PLACEHOLDER
-import com.example.productsStore.presentation.model.ProductUiModel
-import com.example.productsStore.presentation.ui.screen.testing.testtags.ProductDetailsTestTags.PRODUCT_IMAGE
-import com.example.productsStore.presentation.ui.theme.InStockColor
 import com.example.productsStore.presentation.ui.theme.RatingStarColor
 import com.example.productsstrore.R
 
@@ -80,38 +69,36 @@ fun ProductCardPlaceholder(modifier: Modifier = Modifier) {
         shape = MaterialTheme.shapes.medium,
         elevation = CardDefaults.elevatedCardElevation(),
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxSize()
+        Column(
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.large_padding)),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(dimensionResource(R.dimen.large_padding))
         ) {
-            Column(
-                verticalArrangement = Arrangement.SpaceEvenly,
-                horizontalAlignment = Alignment.Start,
-                modifier = Modifier
-                    .weight(10f)
-                    .fillMaxHeight()
-                    .padding(start = dimensionResource(R.dimen.small_padding))
+            Row(
+                verticalAlignment = Alignment.Bottom,
+                horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.small_padding)),
+                modifier = Modifier.fillMaxWidth()
             ) {
                 TextPlaceHolder(
                     text = PRODUCT_TITLE_PLACEHOLDER,
                     style = MaterialTheme.typography.titleLarge,
                     modifier = Modifier.shimmer(dimensionResource(R.dimen.shimmer_corner_radius))
+                        .weight(1f)
                 )
                 TextPlaceHolder(
-                    text = PRODUCT_BRAND_PLACEHOLDER,
+                    text = PRODUCT_PRICE_PLACEHOLDER,
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.shimmer(dimensionResource(R.dimen.shimmer_corner_radius))
                 )
             }
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.large_padding)),
-                modifier = Modifier
-                    .weight(4f)
-                    .padding(dimensionResource(R.dimen.small_padding))
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.small_padding)),
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
             ) {
                 TextPlaceHolder(
-                    text = PRODUCT_PRICE_PLACEHOLDER,
+                    text = PRODUCT_BRAND_PLACEHOLDER,
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.shimmer(dimensionResource(R.dimen.shimmer_corner_radius))
                 )

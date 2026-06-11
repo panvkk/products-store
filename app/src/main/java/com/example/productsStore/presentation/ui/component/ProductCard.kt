@@ -4,8 +4,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -38,39 +38,38 @@ fun ProductCard(
         shape = MaterialTheme.shapes.medium,
         elevation = CardDefaults.elevatedCardElevation(),
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxSize()
+        Column(
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.large_padding)),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(dimensionResource(R.dimen.large_padding))
         ) {
-            Column(
-                verticalArrangement = Arrangement.SpaceEvenly,
-                horizontalAlignment = Alignment.Start,
-                modifier = Modifier
-                    .weight(10f)
-                    .fillMaxHeight()
-                    .padding(start = dimensionResource(R.dimen.small_padding))
+            Row(
+                verticalAlignment = Alignment.Bottom,
+                horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.small_padding)),
+                modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
                     text = product.productTitle,
                     style = MaterialTheme.typography.titleLarge,
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.weight(1f)
                 )
-                Text(
-                    text = product.brand ?: stringResource(R.string.no_brand),
-                    style = MaterialTheme.typography.bodyLarge
-                )
-            }
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.large_padding)),
-                modifier = Modifier
-                    .weight(4f)
-                    .padding(dimensionResource(R.dimen.small_padding))
-            ) {
                 Text(
                     text = "$${product.priceInUSD}",
                     style = MaterialTheme.typography.bodyLarge,
+                )
+            }
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.small_padding)),
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = product.brand ?: stringResource(R.string.no_brand),
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier.weight(1f)
                 )
                 if(canBeAddedToCart) {
                     IconButton(
