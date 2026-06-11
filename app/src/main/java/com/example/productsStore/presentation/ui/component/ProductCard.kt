@@ -19,10 +19,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.CompositingStrategy
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import com.example.productsStore.presentation.model.ProductUiModel
 import com.example.productsstrore.R
 
@@ -37,6 +43,7 @@ fun ProductCard(
         modifier = modifier.height(dimensionResource(R.dimen.product_card_height)),
         shape = MaterialTheme.shapes.medium,
         elevation = CardDefaults.elevatedCardElevation(),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHighest)
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.large_padding)),
@@ -53,8 +60,18 @@ fun ProductCard(
                     text = product.productTitle,
                     style = MaterialTheme.typography.titleLarge,
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.weight(1f)
+                    overflow = TextOverflow.Clip,
+                    modifier = Modifier
+                        .weight(1f)
+                        .fadeEnding(
+                            fadeWidth = dimensionResource(R.dimen.product_title_ending_fade_width),
+                            colorStops = arrayOf(
+                                0.0f to Color.Transparent,
+                                0.3f to MaterialTheme.colorScheme.surfaceContainerHighest.copy(alpha = 0.5f),
+                                0.85f to MaterialTheme.colorScheme.surfaceContainerHighest,
+                                1.0f to MaterialTheme.colorScheme.surfaceContainerHighest
+                            )
+                        )
                 )
                 Text(
                     text = "$${product.priceInUSD}",
@@ -91,3 +108,23 @@ fun ProductCard(
         }
     }
 }
+
+@Composable
+fun Modifier.fadeEnding(
+    fadeWidth: Dp,
+    colorStops: Array<Pair<Float, Color>>
+) : Modifier = this.graphicsLayer {
+        compositingStrategy = CompositingStrategy.Offscreen
+    }.drawWithContent {
+        drawContent()
+
+        val fadeWidthPx = fadeWidth.toPx()
+
+        drawRect(
+            brush = Brush.horizontalGradient(
+                colorStops = colorStops,
+                startX = size.width - fadeWidthPx,
+                endX = size.width
+            )
+        )
+    }

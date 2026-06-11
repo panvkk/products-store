@@ -14,6 +14,7 @@
     <dimen name="shimmer_corner_radius">8dp</dimen>
     <dimen name="smart_toast_elevation">8dp</dimen>
     <dimen name="smart_toast_height">144dp</dimen>
+    <dimen name="product_title_ending_fade_width">50dp</dimen>
 <!-- Paddings -->
     <dimen name="extra_small_padding">4dp</dimen>
     <dimen name="small_padding">8dp</dimen>

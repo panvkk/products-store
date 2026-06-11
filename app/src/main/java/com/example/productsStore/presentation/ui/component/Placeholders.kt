@@ -68,6 +68,7 @@ fun ProductCardPlaceholder(modifier: Modifier = Modifier) {
         modifier = modifier.height(dimensionResource(R.dimen.product_card_height)),
         shape = MaterialTheme.shapes.medium,
         elevation = CardDefaults.elevatedCardElevation(),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHighest)
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.large_padding)),
@@ -101,6 +102,10 @@ fun ProductCardPlaceholder(modifier: Modifier = Modifier) {
                     text = PRODUCT_BRAND_PLACEHOLDER,
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.shimmer(dimensionResource(R.dimen.shimmer_corner_radius))
+                )
+                Box(
+                    modifier = Modifier
+                        .size(dimensionResource(R.dimen.default_icon_container_size))
                 )
             }
         }
