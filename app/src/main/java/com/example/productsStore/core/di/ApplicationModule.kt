@@ -29,8 +29,17 @@ object ApplicationModule {
     @ApplicationScope
     fun provideApplicationScope(): CoroutineScope =
         CoroutineScope(SupervisorJob() + Dispatchers.Default)
+
+    @Provides
+    @ApplicationMainScope
+    fun provideApplicationMainScope() : CoroutineScope =
+        CoroutineScope(SupervisorJob() + Dispatchers.Main)
 }
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class ApplicationScope
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class ApplicationMainScope

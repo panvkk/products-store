@@ -1,6 +1,5 @@
 package com.example.productsStore.presentation.ui.screen
 
-import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -8,8 +7,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -25,18 +22,18 @@ import com.example.productsStore.core.domain.DomainError
 import com.example.productsStore.presentation.contract.ProductsListEvent
 import com.example.productsStore.presentation.contract.ProductsListNews
 import com.example.productsStore.presentation.contract.ProductsListState
+import com.example.productsStore.presentation.model.SmartToastModel
 import com.example.productsStore.presentation.ui.component.ErrorPage
 import com.example.productsStore.presentation.ui.component.ProductCard
 import com.example.productsStore.presentation.ui.component.ProductCardPlaceholder
-import com.example.productsStore.presentation.ui.component.shimmer
 import com.example.productsStore.presentation.viewmodel.ProductsListViewModel
 import com.example.productsstrore.R
-import kotlin.collections.listOf
 
 @Composable
 fun ProductsListScreen(
     modifier: Modifier = Modifier,
     navigateToDetails: (id: Int) -> Unit,
+    showToast: (SmartToastModel) -> Unit,
     viewModel: ProductsListViewModel
 ) {
     val context = LocalContext.current
@@ -49,11 +46,7 @@ fun ProductsListScreen(
             when(new) {
                 is ProductsListNews.NavigateToDetails -> navigateToDetails(new.productId)
                 is ProductsListNews.ShowAddedToCartToast -> {
-                    Toast.makeText(
-                        context,
-                        context.getString(R.string.product_added_to_cart_toast),
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    showToast(SmartToastModel(message = context.getString(R.string.product_added_to_cart_toast, new.productTitle)))
                 }
             }
         }

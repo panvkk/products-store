@@ -19,7 +19,7 @@ sealed interface ProductsListEvent {
         data class OnNavigateDetails(val productId: Int) : Ui
     }
     sealed interface Internal : ProductsListEvent {
-        data object AddedToCart : Internal
+        data class AddedToCart(val addedProductTitle: String) : Internal
         data class NextPageLoaded(
             val newProducts: List<ProductUiModel>,
             val isLastPage: Boolean,
@@ -36,5 +36,5 @@ sealed interface ProductsListCommand {
 
 sealed interface ProductsListNews {
     data class NavigateToDetails(val productId: Int) : ProductsListNews
-    data object ShowAddedToCartToast : ProductsListNews
+    data class ShowAddedToCartToast(val productTitle: String) : ProductsListNews
 }

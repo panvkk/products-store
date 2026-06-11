@@ -1,6 +1,5 @@
 package com.example.productsStore.presentation.ui.screen
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,6 +26,7 @@ import com.example.productsStore.core.domain.DomainError
 import com.example.productsStore.presentation.contract.CartEvent
 import com.example.productsStore.presentation.contract.CartNews
 import com.example.productsStore.presentation.contract.CartState
+import com.example.productsStore.presentation.model.SmartToastModel
 import com.example.productsStore.presentation.ui.component.CartListItem
 import com.example.productsStore.presentation.ui.screen.testing.lazyListItemPosition
 import com.example.productsStore.presentation.ui.screen.testing.testtags.CartScreenTestTags.CART_ITEM
@@ -42,6 +42,7 @@ internal fun CartScreen(
     modifier: Modifier = Modifier,
     navigateToDetails: (Int) -> Unit,
     viewModel: CartViewModel,
+    showToast: (SmartToastModel) -> Unit,
     showCartHint: () -> Unit
 ) {
     val context = LocalContext.current
@@ -53,11 +54,12 @@ internal fun CartScreen(
             when(new) {
                 is CartNews.NavigateToDetails -> navigateToDetails(new.productId)
                 is CartNews.ShowCartClearedToast -> {
-                    Toast.makeText(
-                        context,
-                        context.getString(R.string.cart_cleared_toast),
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    showToast(SmartToastModel(message = context.getString(R.string.cart_cleared_toast)))
+//                    Toast.makeText(
+//                        context,
+//                        context.getString(R.string.cart_cleared_toast),
+//                        Toast.LENGTH_SHORT
+//                    ).show()
                 }
                 is CartNews.ShowCartHintDialog -> { showCartHint() }
             }

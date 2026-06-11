@@ -58,6 +58,6 @@ class ProductsListUpdate : Update<ProductsListState, ProductsListEvent, Products
             is ProductsListEvent.Internal.LoadingStarted ->
                 Next(state = state.copy(isLoadingGoing = true))
             is ProductsListEvent.Internal.AddedToCart ->
-                Next(state = state, news = listOf(ShowAddedToCartToast))
+                Next(state = state, news = listOf(ShowAddedToCartToast(event.addedProductTitle)))
         }
 }

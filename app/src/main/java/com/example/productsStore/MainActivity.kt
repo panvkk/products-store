@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.productsStore.presentation.background.receiver.NetworkStatusReceiver
+import com.example.productsStore.presentation.ui.component.toast.ToastManager
 import com.example.productsStore.presentation.ui.theme.ProductsStoreTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -23,6 +24,8 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var networkReceiver: NetworkStatusReceiver
+    @Inject
+    lateinit var toastManager: ToastManager
     private var navController: NavHostController? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,7 +40,7 @@ class MainActivity : AppCompatActivity() {
                 intent?.let { rememberNavController.handleDeepLink(it) }
             }
             ProductsStoreTheme {
-                App(rememberNavController)
+                App(rememberNavController, toastManager)
             }
         }
         requestPostNotificationPermission(this)

@@ -17,22 +17,23 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navDeepLink
 import androidx.navigation.toRoute
 import com.example.productsStore.core.PRODUCT_DETAILS_DEEP_LINK
 import com.example.productsStore.presentation.contract.ProductDetailsEvent
+import com.example.productsStore.presentation.model.SmartToastModel
 import com.example.productsStore.presentation.ui.component.CartHintDialog
 import com.example.productsStore.presentation.ui.component.NoInternetIndicator
 import com.example.productsStore.presentation.ui.component.ProductsStoreTopBar
+import com.example.productsStore.presentation.ui.component.toast.SmartToastHost
+import com.example.productsStore.presentation.ui.component.toast.ToastManager
 import com.example.productsStore.presentation.ui.screen.CartScreen
 import com.example.productsStore.presentation.ui.screen.ProductDetailsScreen
 import com.example.productsStore.presentation.ui.screen.ProductsListScreen
@@ -47,7 +48,10 @@ import com.example.productsstrore.R
 
 
 @Composable
-fun App(navController: NavHostController) {
+fun App(
+    navController: NavHostController,
+    toastManager: ToastManager
+) {
     val globalViewModel = hiltViewModel<GlobalViewModel>()
     val isOnline by globalViewModel.isOnline.collectAsStateWithLifecycle()
     var shouldDisplayCartHint by remember { mutableStateOf(false) }
@@ -79,7 +83,8 @@ fun App(navController: NavHostController) {
 
                     ProductsListScreen(
                         viewModel = productsListVM,
-                        navigateToDetails = { id: Int -> navController.navigate(ProductDetailsDestination(id)) }
+                        navigateToDetails = { id: Int -> navController.navigate(ProductDetailsDestination(id)) },
+                        showToast = { toast: SmartToastModel -> toastManager.show(toast) }
                     )
                 }
                 composable<ProductDetailsDestination>(
@@ -125,16 +130,25 @@ fun App(navController: NavHostController) {
                             navController.navigate(ProductDetailsDestination(id))
                         },
                         viewModel = cartViewModel,
+                        showToast = { toast: SmartToastModel -> toastManager.show(toast) },
                         showCartHint = { shouldDisplayCartHint = true }
                     )
                 }
             }
             if(!isOnline) {
                 NoInternetIndicator(
-                    modifier = Modifier.align(Alignment.BottomCenter)
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
                         .padding(bottom = innerPadding.calculateBottomPadding())
                 )
             }
+            SmartToastHost(
+                toastManager,
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = innerPadding.calculateBottomPadding())
+                    .padding(dimensionResource(R.dimen.large_padding))
+            )
         }
         if(shouldDisplayCartHint) {
             CartHintDialog(onDismiss = { shouldDisplayCartHint = false })

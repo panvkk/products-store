@@ -3,8 +3,8 @@ package com.example.productsStore.presentation.commandshandler
 import com.example.productsStore.core.Resource
 import com.example.productsStore.core.di.ApplicationScope
 import com.example.productsStore.core.domain.DomainError
-import com.example.productsStore.domain.usecase.cart.AddToCartUseCase
 import com.example.productsStore.domain.usecase.GetProductsUseCase
+import com.example.productsStore.domain.usecase.cart.AddToCartUseCase
 import com.example.productsStore.presentation.contract.ProductsListCommand
 import com.example.productsStore.presentation.contract.ProductsListEvent
 import com.example.productsStore.presentation.mapper.toDomain
@@ -39,7 +39,9 @@ class ProductsListCommandsHandler @Inject constructor(
                 }
                 is ProductsListCommand.AddToCart -> {
                     addToCart(command.productUiModel)
-                    emit(ProductsListEvent.Internal.AddedToCart)
+                    emit(ProductsListEvent.Internal.AddedToCart(
+                        addedProductTitle = command.productUiModel.productTitle)
+                    )
                 }
             }
         }
