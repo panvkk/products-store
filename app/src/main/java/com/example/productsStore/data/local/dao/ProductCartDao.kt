@@ -15,6 +15,9 @@ interface ProductCartDao {
     @Query("SELECT * FROM carted_products_table WHERE product_id = :id")
     suspend fun getCartedProduct(id: Int) : CartedProductEntity?
 
+    @Query("SELECT quantity FROM carted_products_table WHERE product_id = :id")
+    suspend fun getProductQuantityInCart(id: Int) : Int?
+
     @Insert(onConflict = REPLACE)
     suspend fun putProduct(cartedProductEntity: CartedProductEntity)
 

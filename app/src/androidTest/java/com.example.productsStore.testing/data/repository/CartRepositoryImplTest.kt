@@ -46,7 +46,7 @@ internal class CartRepositoryImplTest {
         val productId = 1337
 
         // WHEN
-        createRepository().addToCart(productId)
+        createRepository().addToCart(productId, "title")
 
         // THEN
         assertEquals(1, productsCartDao.getProductQuantityInCart(productId))
@@ -56,10 +56,10 @@ internal class CartRepositoryImplTest {
     fun GIVEN_productIsNotFirstTimeInCart_WHEN_addToCart_THEN_noNewRecordInDb() = runTest {
         // GIVEN
         val productId = 1337
-        productsCartDao.putProduct(CartedProductEntity(productId = productId, quantity = 1))
+        productsCartDao.putProduct(CartedProductEntity(productId = productId, quantity = 1, productTitle = "title", isNotificationsOn = false))
 
         // WHEN
-        createRepository().addToCart(productId)
+        createRepository().addToCart(productId, "title")
 
         // THEN
         assertEquals(1, productsCartDao.getCartedProducts().first().size)
@@ -72,7 +72,7 @@ internal class CartRepositoryImplTest {
         val productIds = listOf(1, 2, 3, 4, 5, 6, 7, 8)
 
         // WHEN
-        productIds.forEach { createRepository().addToCart(it) }
+        productIds.forEach { createRepository().addToCart(it, "title") }
         val actualCount = productsCartDao.getCartedProducts().first().size
 
         // THEN
@@ -84,7 +84,7 @@ internal class CartRepositoryImplTest {
     fun GIVEN_severalProducts_WHEN_clearCart_THEN_AllDeleted() = runTest {
         // GIVEN
         val productIds = listOf(1, 2, 3, 4, 5, 6, 7, 8)
-        productIds.forEach { productsCartDao.putProduct(CartedProductEntity(it, 1)) }
+        productIds.forEach { productsCartDao.putProduct(CartedProductEntity(it, quantity = 1, productTitle = "title", isNotificationsOn = false)) }
 
         // WHEN
         createRepository().clearCart()

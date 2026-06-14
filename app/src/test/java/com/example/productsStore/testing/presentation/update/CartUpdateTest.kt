@@ -26,7 +26,8 @@ internal class CartUpdateTest {
                 priceInUSD = 1f,
                 brand = ""
             ),
-            quantity = 1
+            quantity = 1,
+            isNotificationsOn = false,
         )
     )
     private val testCartSize = 1

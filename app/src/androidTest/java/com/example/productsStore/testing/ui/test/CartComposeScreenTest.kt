@@ -91,6 +91,7 @@ internal class CartComposeScreenTest : TestCase(
             CartScreenContent(
                 onClickItem = { },
                 onClearCart = { },
+                onLongClickItem = { _, _ -> },
                 state = state
             )
         }
@@ -112,6 +113,7 @@ internal class CartComposeScreenTest : TestCase(
                 priceInUSD = 1f,
                 brand = ""
             ),
+            isNotificationsOn = false,
             quantity = 1
         ),
         CartItemUiModel(
@@ -121,6 +123,7 @@ internal class CartComposeScreenTest : TestCase(
                 priceInUSD = 1f,
                 brand = ""
             ),
+            isNotificationsOn = false,
             quantity = 2
         ),
         CartItemUiModel(
@@ -130,6 +133,7 @@ internal class CartComposeScreenTest : TestCase(
                 priceInUSD = 1f,
                 brand = ""
             ),
+            isNotificationsOn = false,
             quantity = 3
         ),
         CartItemUiModel(
@@ -139,6 +143,7 @@ internal class CartComposeScreenTest : TestCase(
                 priceInUSD = 1f,
                 brand = ""
             ),
+            isNotificationsOn = false,
             quantity = 4
         ),
         CartItemUiModel(
@@ -148,6 +153,7 @@ internal class CartComposeScreenTest : TestCase(
                 priceInUSD = 1f,
                 brand = ""
             ),
+            isNotificationsOn = false,
             quantity = 5
         ),
         CartItemUiModel(
@@ -157,6 +163,7 @@ internal class CartComposeScreenTest : TestCase(
                 priceInUSD = 1f,
                 brand = ""
             ),
+            isNotificationsOn = false,
             quantity = 6
         ),
         )
