@@ -21,7 +21,6 @@ class CartRepositoryImpl @Inject constructor(
         return productCartDao.getCartedProducts()
             .map { cartedProductEntities -> cartedProductEntities.map { it.toDomain() } }
             .catch { e ->
-                if(e is CancellationException) throw e
                 logger.e(TAG, e.message ?: UNKNOWN_ERROR)
             }
     }
