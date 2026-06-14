@@ -68,7 +68,10 @@ fun ProductsListScreen(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            itemsIndexed(state.products) { index, product ->
+            itemsIndexed(
+                items = state.products,
+                key = { _, item -> item.id }
+            ) { index, product ->
                 ProductCard(
                     product = product,
                     onAddToCart = { store.dispatch(ProductsListEvent.Ui.OnAddToCart(product.id)) },
