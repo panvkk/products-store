@@ -28,7 +28,7 @@ class CartRepositoryImpl @Inject constructor(
             }
     }
 
-    override suspend fun getCartedProduct(id: Int): Resource<CartedProduct> {
+    override suspend fun getCartedProduct(id: Int): Resource<CartItem> {
         return try {
             val cartedProduct =
                 productCartDao.getCartedProduct(id) ?: return Resource.Error(DomainError.Other)
@@ -40,7 +40,7 @@ class CartRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun addToCart(id: Int, title: String) {
+    override suspend fun addToCart(product: Product) {
         try {
             val currentStateInCart = productCartDao.getCartedProduct(product.id)
 

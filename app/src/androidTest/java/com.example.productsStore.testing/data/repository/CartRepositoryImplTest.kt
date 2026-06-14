@@ -5,8 +5,9 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import com.example.productsStore.data.local.ProductsStoreDatabase
 import com.example.productsStore.data.local.dao.ProductCartDao
-import com.example.productsStore.data.local.entity.CartedProductEntity
+import com.example.productsStore.data.mapper.toCartEntity
 import com.example.productsStore.data.repository.CartRepositoryImpl
+import com.example.productsStore.domain.model.Product
 import com.example.productsStore.testing.stub.LoggerStub
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
@@ -43,36 +44,37 @@ internal class CartRepositoryImplTest {
     @Test
     fun GIVEN_productIsFirstTimeInCart_WHEN_addToCart_THEN_newRecordInDb() = runTest {
         // GIVEN
-        val productId = 1337
+        val product = Product(id = 1337, title = "", price = 1f, brand = "")
 
         // WHEN
-        createRepository().addToCart(productId, "title")
+        createRepository().addToCart(product)
 
         // THEN
-        assertEquals(1, productsCartDao.getProductQuantityInCart(productId))
+        assertEquals(1, productsCartDao.getProductQuantityInCart(product.id))
     }
 
     @Test
     fun GIVEN_productIsNotFirstTimeInCart_WHEN_addToCart_THEN_noNewRecordInDb() = runTest {
         // GIVEN
-        val productId = 1337
-        productsCartDao.putProduct(CartedProductEntity(productId = productId, quantity = 1, productTitle = "title", isNotificationsOn = false))
+        val product = Product(id = 1337, title = "", price = 1f, brand = "")
+        productsCartDao.putProduct(product.toCartEntity(1, false))
 
         // WHEN
-        createRepository().addToCart(productId, "title")
+        createRepository().addToCart(product)
 
         // THEN
         assertEquals(1, productsCartDao.getCartedProducts().first().size)
-        assertEquals(2, productsCartDao.getProductQuantityInCart(productId))
+        assertEquals(2, productsCartDao.getProductQuantityInCart(product.id))
     }
 
     @Test
     fun GIVEN_severalProducts_WHEN_addToCartEach_THEN_AllAdded() = runTest {
         // GIVEN
+        val product = Product(id = 1337, title = "", price = 1f, brand = "")
         val productIds = listOf(1, 2, 3, 4, 5, 6, 7, 8)
 
         // WHEN
-        productIds.forEach { createRepository().addToCart(it, "title") }
+        productIds.forEach { createRepository().addToCart(product.copy(id = it)) }
         val actualCount = productsCartDao.getCartedProducts().first().size
 
         // THEN
@@ -83,8 +85,12 @@ internal class CartRepositoryImplTest {
     @Test
     fun GIVEN_severalProducts_WHEN_clearCart_THEN_AllDeleted() = runTest {
         // GIVEN
+        val product = Product(id = 1337, title = "", price = 1f, brand = "")
         val productIds = listOf(1, 2, 3, 4, 5, 6, 7, 8)
-        productIds.forEach { productsCartDao.putProduct(CartedProductEntity(it, quantity = 1, productTitle = "title", isNotificationsOn = false)) }
+        productIds.forEach { productsCartDao.putProduct(
+            product.copy(id = it).toCartEntity(1, false)
+        )
+        }
 
         // WHEN
         createRepository().clearCart()

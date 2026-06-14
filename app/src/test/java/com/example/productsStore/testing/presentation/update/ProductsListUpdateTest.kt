@@ -81,8 +81,9 @@ internal class ProductsListUpdateTest {
             products = emptyList(),
             pageSize = 10
         )
-        val event = ProductsListEvent.Internal.AddedToCart
-        val expectedNew = ProductsListNews.ShowAddedToCartToast
+        val expectedTitle = "title"
+        val event = ProductsListEvent.Internal.AddedToCart(expectedTitle)
+        val expectedNew = ProductsListNews.ShowAddedToCartToast(expectedTitle)
 
         // WHEN
         val actualNews: List<ProductsListNews> = createUpdate().update(initialState, event).news
