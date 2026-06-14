@@ -3,17 +3,14 @@ package com.example.productsStore.data.repository
 import com.example.productsStore.core.CACHE_EXPIRATION_DATE_IN_SECONDS
 import com.example.productsStore.core.Resource
 import com.example.productsStore.core.domain.DomainError
-import com.example.productsStore.core.logger.LoggingProvider
-import com.example.productsStore.data.local.dao.ProductCartDao
+import com.example.productsStore.core.logger.Logger
 import com.example.productsStore.data.local.dao.ProductDetailsCacheDao
-import com.example.productsStore.data.local.entity.CartedProductEntity
 import com.example.productsStore.data.mapper.toDomain
 import com.example.productsStore.data.mapper.toEntity
 import com.example.productsStore.data.remote.service.ProductsService
 import com.example.productsStore.domain.model.Product
 import com.example.productsStore.domain.model.ProductDetails
 import com.example.productsStore.domain.repository.ProductsRepository
-import kotlinx.coroutines.flow.Flow
 import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
@@ -23,7 +20,7 @@ import kotlin.time.Clock
 class ProductsRepositoryImpl @Inject constructor(
     private val productsService: ProductsService,
     private val productDetailsCacheDao: ProductDetailsCacheDao,
-    private val logger: LoggingProvider
+    private val logger: Logger
 ) : ProductsRepository {
     override suspend fun getProducts(
         skip: Int,

@@ -1,7 +1,7 @@
 package com.example.productsStore.core.di
 
 import com.example.productsStore.core.logger.AppLogger
-import com.example.productsStore.core.logger.LoggingProvider
+import com.example.productsStore.core.logger.Logger
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,7 +16,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object ApplicationModule {
     @Provides
-    fun provideLogger() : LoggingProvider = AppLogger()
+    fun provideLogger() : Logger = AppLogger()
 
     @Provides
     @Singleton

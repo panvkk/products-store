@@ -1,11 +1,12 @@
 package com.example.productsStore.data.repository
 
-import com.example.productsStore.core.logger.LoggingProvider
+import com.example.productsStore.core.logger.Logger
 import com.example.productsStore.data.local.dao.ProductCartDao
 import com.example.productsStore.data.local.entity.CartedProductEntity
 import com.example.productsStore.data.mapper.toDomain
 import com.example.productsStore.domain.model.CartedProduct
 import com.example.productsStore.domain.repository.CartRepository
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
@@ -13,13 +14,16 @@ import javax.inject.Inject
 
 class CartRepositoryImpl @Inject constructor(
     private val productCartDao: ProductCartDao,
-    private val logger: LoggingProvider
+    private val logger: Logger
 ) : CartRepository {
 
     override fun getCartedProducts() : Flow<List<CartedProduct>>{
         return productCartDao.getCartedProducts()
             .map { cartedProductEntities -> cartedProductEntities.map { it.toDomain() } }
-            .catch { e -> logger.e(TAG, e.message ?: UNKNOWN_ERROR) }
+            .catch { e ->
+                if(e is CancellationException) throw e
+                logger.e(TAG, e.message ?: UNKNOWN_ERROR)
+            }
     }
 
     override suspend fun addToCart(id: Int) {
@@ -29,6 +33,7 @@ class CartRepositoryImpl @Inject constructor(
                 CartedProductEntity(id, currentQuantityInCart + 1)
             )
         } catch (e: Exception) {
+            if(e is CancellationException) throw e
             logger.e(TAG, e.message ?: UNKNOWN_ERROR)
         }
     }
@@ -37,6 +42,7 @@ class CartRepositoryImpl @Inject constructor(
         try {
             productCartDao.clearCart()
         } catch (e: Exception) {
+            if(e is CancellationException) throw e
             logger.e(TAG, e.message ?: UNKNOWN_ERROR)
         }
     }

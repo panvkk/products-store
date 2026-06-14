@@ -45,7 +45,7 @@ fun CartScreen(
                     if(state.cartItems.isEmpty()) {
                         item { Text(stringResource(R.string.empty_cart)) }
                     } else {
-                        items(state.cartItems) { cartItem ->
+                        items(state.cartItems, { it.product.id }) { cartItem ->
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.medium_padding)),
