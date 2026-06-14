@@ -1,8 +1,8 @@
 package com.example.productsStore.testing.stub
 
-import com.example.productsStore.core.logger.LoggingProvider
+import com.example.productsStore.core.logger.Logger
 
-internal class LoggingProviderStub : LoggingProvider {
+internal class LoggerStub : Logger {
     override fun e(tag: String?, msg: String) = Unit
 
     override fun d(tag: String?, msg: String) = Unit

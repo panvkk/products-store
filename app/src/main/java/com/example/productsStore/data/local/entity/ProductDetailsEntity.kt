@@ -18,5 +18,5 @@ data class ProductDetailsEntity(
     val availabilityStatus: String,
     @ColumnInfo("warranty_information")
     val warrantyInformation: String,
-    val timestamp: Long = System.now().epochSeconds
+    val timestamp: Long
 )

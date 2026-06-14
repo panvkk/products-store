@@ -41,7 +41,7 @@ internal class DataMappersTest {    // тестируем только те ма
             warrantyInformation = ""
         )
         // WHEN
-        val actual = productDetailsApi.toEntity(1)
+        val actual = productDetailsApi.toEntity(1, 1L)
         // THEN
         val expectedImageUrl = "firstUrl"
 

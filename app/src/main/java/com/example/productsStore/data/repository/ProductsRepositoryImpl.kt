@@ -20,7 +20,8 @@ import kotlin.time.Clock
 class ProductsRepositoryImpl @Inject constructor(
     private val productsService: ProductsService,
     private val productDetailsCacheDao: ProductDetailsCacheDao,
-    private val logger: Logger
+    private val logger: Logger,
+    private val clock: Clock
 ) : ProductsRepository {
     override suspend fun getProducts(
         skip: Int,
@@ -45,14 +46,14 @@ class ProductsRepositoryImpl @Inject constructor(
 
     override suspend fun getProductDetails(id: Int, fields: String): Resource<ProductDetails> {
         val cachedDetails = productDetailsCacheDao.getDetails(id)
-        val currentTimestamp = Clock.System.now().epochSeconds
+        val currentTimestamp = clock.now().epochSeconds
         val isCacheNotExpired = cachedDetails != null && cachedDetails.timestamp + CACHE_EXPIRATION_DATE_IN_SECONDS > currentTimestamp
 
         return try {
             if(isCacheNotExpired) return Resource.Success(cachedDetails.toDomain(false))
 
             val response = productsService.getProductDetails(id, fields)
-            productDetailsCacheDao.putDetails(response.toEntity(id))
+            productDetailsCacheDao.putDetails(response.toEntity(id, currentTimestamp))
             Resource.Success(response.toDomain())
         } catch (e: HttpException) {
             if(cachedDetails != null) return Resource.Success(cachedDetails.toDomain(true))

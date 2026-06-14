@@ -11,12 +11,18 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import javax.inject.Qualifier
 import javax.inject.Singleton
+import kotlin.time.Clock
 
 @Module
 @InstallIn(SingletonComponent::class)
 object ApplicationModule {
     @Provides
+    @Singleton
     fun provideLogger() : Logger = AppLogger()
+
+    @Provides
+    @Singleton
+    fun provideClock() : Clock = Clock.System
 
     @Provides
     @Singleton

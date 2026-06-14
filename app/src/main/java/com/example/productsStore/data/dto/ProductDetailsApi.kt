@@ -11,6 +11,6 @@ data class ProductDetailsApi(
     @SerialName("rating") val rating: Float,
     @SerialName("price") val price: Float,
     @SerialName("weight") val weight: Int,
-    @SerialName("availability_status") val availabilityStatus: String,
-    @SerialName("warranty_information") val warrantyInformation: String
+    @SerialName("availabilityStatus") val availabilityStatus: String,
+    @SerialName("warrantyInformation") val warrantyInformation: String
 )

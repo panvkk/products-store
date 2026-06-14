@@ -10,6 +10,6 @@ import com.example.productsStore.domain.model.ProductDetails
 
 fun ProductApi.toDomain() = Product(id, title, price, brand)
 fun ProductDetailsApi.toDomain() = ProductDetails(title, description, imageUrls.firstOrNull(), rating, price, weight, availabilityStatus, warrantyInformation)
-fun ProductDetailsApi.toEntity(id: Int) = ProductDetailsEntity(id, title, description, imageUrls.firstOrNull(), rating, price, weight, availabilityStatus, warrantyInformation)
+fun ProductDetailsApi.toEntity(id: Int, timestamp: Long) = ProductDetailsEntity(id, title, description, imageUrls.firstOrNull(), rating, price, weight, availabilityStatus, warrantyInformation, timestamp)
 fun ProductDetailsEntity.toDomain(isIrrelevantInfo: Boolean) = ProductDetails(title, description, imageUrl, rating, price, weight, availabilityStatus, warrantyInformation, isIrrelevantInfo)
 fun CartedProductEntity.toDomain() = CartedProduct(productId, quantity)

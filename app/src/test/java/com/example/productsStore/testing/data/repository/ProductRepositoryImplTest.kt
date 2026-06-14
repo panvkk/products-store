@@ -4,7 +4,7 @@ import com.example.productsStore.core.Resource
 import com.example.productsStore.data.dto.ProductDetailsApi
 import com.example.productsStore.data.local.entity.ProductDetailsEntity
 import com.example.productsStore.data.repository.ProductsRepositoryImpl
-import com.example.productsStore.testing.stub.LoggingProviderStub
+import com.example.productsStore.testing.stub.LoggerStub
 import com.example.productsStore.testing.stub.ProductDetailsCacheDaoStub
 import com.example.productsStore.testing.stub.ProductsServiceStub
 import kotlinx.coroutines.test.runTest
@@ -14,18 +14,26 @@ import org.junit.jupiter.api.assertNotNull
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import kotlin.time.Clock
+import kotlin.time.Instant
 
 internal class ProductRepositoryImplTest {
 
-    private lateinit var loggingProvider: LoggingProviderStub
+    private lateinit var logger: LoggerStub
     private lateinit var productDetailsCacheDao: ProductDetailsCacheDaoStub
     private lateinit var productsService: ProductsServiceStub
+    private lateinit var clock: Clock
+
+    private val freshTimestamp = 1680000000L
+    private val expiredTimestamp = 100L
 
     @BeforeEach
     fun setUp() {
-        loggingProvider = LoggingProviderStub()
+        logger = LoggerStub()
         productDetailsCacheDao = ProductDetailsCacheDaoStub()
         productsService = ProductsServiceStub()
+        clock = object : Clock {
+            override fun now(): Instant = Instant.fromEpochSeconds(freshTimestamp)
+        }
     }
 
     @Test
@@ -43,7 +51,7 @@ internal class ProductRepositoryImplTest {
             availabilityStatus = "",
             imageUrl = "imageUrl",
             warrantyInformation = "",
-            timestamp = Clock.System.now().epochSeconds, // кэш точно не просрочен
+            timestamp = freshTimestamp, // кэш точно не просрочен
         )
         val detailsFromNetwork = ProductDetailsApi(
             title = "Fresh details from network",
@@ -82,7 +90,7 @@ internal class ProductRepositoryImplTest {
             availabilityStatus = "",
             imageUrl = "imageUrl",
             warrantyInformation = "",
-            timestamp = 1L, // кэш точно просрочен
+            timestamp = expiredTimestamp, // кэш точно просрочен
         )
         val detailsFromNetwork = ProductDetailsApi(
             title = expectedTitle,
@@ -149,7 +157,7 @@ internal class ProductRepositoryImplTest {
             availabilityStatus = "",
             imageUrl = "imageUrl",
             warrantyInformation = "",
-            timestamp = 1L, // кэш точно просрочен
+            timestamp = expiredTimestamp, // кэш точно просрочен
         )
         val shouldServiceThrowException = true
 
@@ -182,15 +190,38 @@ internal class ProductRepositoryImplTest {
     @Test
     fun `GIVEN success network answer WHEN getProductsDetails THEN cache is updating with correct timestamp`() = runTest {
         // GIVEN
-        val permissibleDeviation = 60L      // Если метка времени не старше 60 секунд (вдруг долго будет проходить тест), то она свежая
+        val cachedDetails = ProductDetailsEntity(
+            id = 1,
+            title = "",
+            description = "",
+            rating = 1f,
+            price = 1f,
+            weight = 1,
+            availabilityStatus = "",
+            imageUrl = "imageUrl",
+            warrantyInformation = "",
+            timestamp = expiredTimestamp, // кэш точно просрочен
+        )
+        val detailsFromNetwork = ProductDetailsApi(
+            title = "",
+            description = "",
+            imageUrls = listOf("firstUrl", "secondUrl"),
+            rating = 1f,
+            price = 1f,
+            weight = 1,
+            availabilityStatus = "",
+            warrantyInformation = ""
+        )
         // WHEN
+        productDetailsCacheDao.productDetailsToBeReturned = cachedDetails
+        productsService.productDetailsToBeReturned = detailsFromNetwork
         createRepository().getProductDetails(1, "")
         val newDetails = productDetailsCacheDao.savedProductDetails
 
         // THEN
         assertNotNull(newDetails)
-        assertTrue(newDetails.timestamp + permissibleDeviation > Clock.System.now().epochSeconds)
+        assertEquals(freshTimestamp, newDetails.timestamp)
     }
 
-    private fun createRepository() = ProductsRepositoryImpl(productsService, productDetailsCacheDao, loggingProvider)
+    private fun createRepository() = ProductsRepositoryImpl(productsService, productDetailsCacheDao, logger, clock)
 }
