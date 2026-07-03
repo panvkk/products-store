@@ -38,7 +38,8 @@ fun CartListItem(
         ) {
             ProductCard(
                 product = cartItemModel.product,
-                canBeAddedToCart = false,
+                showAddToCartButton = false,
+                isAddToCartClickable = false,
                 modifier = Modifier
                     .weight(8f)
                     .combinedClickable(

@@ -37,7 +37,7 @@ object PresentationModule {
             initialState = ProductsListState(
                 isLoadingGoing = false,
                 isLastPageReached = false,
-                products = emptyList(),
+                productItems = emptyList(),
                 pageSize = 0
             ),
             initialCommands = emptyList(),

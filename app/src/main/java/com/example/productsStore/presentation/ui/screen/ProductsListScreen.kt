@@ -67,20 +67,21 @@ fun ProductsListScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             itemsIndexed(
-                items = state.products,
-                key = { _, item -> item.id }
-            ) { index, product ->
+                items = state.productItems,
+                key = { _, item -> item.product.id }
+            ) { index, item ->
                 ProductCard(
-                    product = product,
-                    onAddToCart = { store.dispatch(ProductsListEvent.Ui.OnAddToCart(product)) },
+                    product = item.product,
+                    isAddToCartClickable = item.isAddToCartClickable,
+                    onAddToCart = { store.dispatch(ProductsListEvent.Ui.OnAddToCart(item.product)) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = dimensionResource(R.dimen.small_padding))
                         .clickable {
-                            store.dispatch(ProductsListEvent.Ui.OnNavigateDetails(product.id))
+                            store.dispatch(ProductsListEvent.Ui.OnNavigateDetails(item.product.id))
                         }
                 )
-                if(index + itemsCountBeforeFetch == state.products.size - 1
+                if(index + itemsCountBeforeFetch == state.productItems.size - 1
                     && state.error == null) {
                     store.dispatch(ProductsListEvent.Ui.OnLoadNextPage)
                 }

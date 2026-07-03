@@ -2,6 +2,9 @@ package com.example.productsStore.core
 
 const val CACHE_EXPIRATION_DATE_IN_SECONDS: Long = 24 * 60 * 60
 
+const val SMART_TOAST_DURATION = 3_000L
+const val DELAY_AFTER_ADDING_TO_CART = 4_000L
+
 const val PLACEHOLDERS_COUNT_IN_LIST = 5
 const val PRODUCT_TITLE_PLACEHOLDER = "Product title"
 const val PRODUCT_BRAND_PLACEHOLDER = "Some brand"

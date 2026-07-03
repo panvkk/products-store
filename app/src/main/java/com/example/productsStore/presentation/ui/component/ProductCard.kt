@@ -1,5 +1,7 @@
 package com.example.productsStore.presentation.ui.component
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,6 +18,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,9 +39,16 @@ import com.example.productsstrore.R
 fun ProductCard(
     product: ProductUiModel,
     modifier: Modifier = Modifier,
-    canBeAddedToCart: Boolean = true,
+    isAddToCartClickable: Boolean,
+    showAddToCartButton: Boolean = true,
     onAddToCart: () -> Unit = {  }
 ) {
+    val addToCartButtonBackgroundColor by animateColorAsState(
+        targetValue = if(isAddToCartClickable) MaterialTheme.colorScheme.primary
+            else MaterialTheme.colorScheme.inversePrimary,
+        animationSpec = tween(200)
+    )
+
     Card(
         modifier = modifier.height(dimensionResource(R.dimen.product_card_height)),
         shape = MaterialTheme.shapes.medium,
@@ -88,13 +98,13 @@ fun ProductCard(
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.weight(1f)
                 )
-                if(canBeAddedToCart) {
+                if(showAddToCartButton) {
                     IconButton(
-                        onClick = { onAddToCart() },
+                        onClick = { if(isAddToCartClickable) onAddToCart() },
                         modifier = Modifier
                             .size(dimensionResource(R.dimen.default_icon_container_size))
                             .clip(MaterialTheme.shapes.small)
-                            .background(MaterialTheme.colorScheme.primary)
+                            .background(addToCartButtonBackgroundColor)
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.add_shopping_cart),

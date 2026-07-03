@@ -16,7 +16,7 @@ internal class ProductsListUpdateTest {
     private val initialState = ProductsListState(
         isLoadingGoing = true,
         isLastPageReached = false,
-        products = emptyList(),
+        productItems = emptyList(),
         pageSize = 1,
         error = null
     )
@@ -32,7 +32,7 @@ internal class ProductsListUpdateTest {
     @Test
     fun `GIVEN success loading WHEN NextPageLoaded THEN state correctly updates`() {
         // GIVEN
-        val expectedScreenState = initialState.copy(isLoadingGoing = false, products = testProducts)
+        val expectedScreenState = initialState.copy(isLoadingGoing = false, productItems = testProducts)
         val event = ProductsListEvent.Internal.NextPageLoaded(testProducts, false, null)
 
         // WHEN
@@ -78,7 +78,7 @@ internal class ProductsListUpdateTest {
         val initialState = ProductsListState(
             isLoadingGoing = true,
             isLastPageReached = false,
-            products = emptyList(),
+            productItems = emptyList(),
             pageSize = 10
         )
         val expectedTitle = "title"

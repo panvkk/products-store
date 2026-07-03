@@ -4,6 +4,7 @@ import com.example.productsStore.presentation.contract.ProductsListCommand
 import com.example.productsStore.presentation.contract.ProductsListCommand.AddToCart
 import com.example.productsStore.presentation.contract.ProductsListCommand.FetchNextPage
 import com.example.productsStore.presentation.contract.ProductsListEvent
+import com.example.productsStore.presentation.contract.ProductsListItem
 import com.example.productsStore.presentation.contract.ProductsListNews
 import com.example.productsStore.presentation.contract.ProductsListNews.NavigateToDetails
 import com.example.productsStore.presentation.contract.ProductsListNews.ShowAddedToCartToast
@@ -23,7 +24,7 @@ class ProductsListUpdate : Update<ProductsListState, ProductsListEvent, Products
                     state = newState,
                     commands = listOf(
                         FetchNextPage(
-                            skip = newState.products.size,
+                            skip = newState.productItems.size,
                             limit = newState.pageSize
                         )
                     )
@@ -35,7 +36,7 @@ class ProductsListUpdate : Update<ProductsListState, ProductsListEvent, Products
                     state = state,
                     commands = if (shouldFetchNextPage) listOf(
                         FetchNextPage(
-                            skip = state.products.size,
+                            skip = state.productItems.size,
                             limit = state.pageSize
                         )
                     )
@@ -43,21 +44,37 @@ class ProductsListUpdate : Update<ProductsListState, ProductsListEvent, Products
                 )
             }
             is ProductsListEvent.Ui.OnAddToCart ->
-                Next(state = state, commands = listOf(AddToCart(event.productUiModel)))
+                Next(
+                    state = state,
+                    commands = listOf(
+                        AddToCart(event.productUiModel),
+                        ProductsListCommand.DelayAddToCartClickability(event.productUiModel.id)
+                    )
+                )
             is ProductsListEvent.Ui.OnNavigateDetails ->
                 Next(state = state, news = listOf(NavigateToDetails(event.productId)))
-            is ProductsListEvent.Internal.NextPageLoaded ->
+            is ProductsListEvent.Internal.NextPageLoaded -> {
+                val newProducts = state.productItems + event.newProducts.map { ProductsListItem(it) }
                 Next(
                     state = state.copy(
-                        products = state.products + event.newProducts,
+                        productItems = newProducts,
                         isLoadingGoing = false,
                         isLastPageReached = event.isLastPage,
                         error = event.error
                     )
                 )
+            }
             is ProductsListEvent.Internal.LoadingStarted ->
                 Next(state = state.copy(isLoadingGoing = true))
             is ProductsListEvent.Internal.AddedToCart ->
                 Next(state = state, news = listOf(ShowAddedToCartToast(event.addedProductTitle)))
+            is ProductsListEvent.Internal.UpdateAddToCartClickability -> {
+                val newItems = state.productItems.map {
+                    if(it.product.id == event.itemId)
+                        it.copy(isAddToCartClickable = event.isClickable)
+                    else it
+                }
+                Next(state = state.copy(productItems = newItems))
+            }
         }
 }
