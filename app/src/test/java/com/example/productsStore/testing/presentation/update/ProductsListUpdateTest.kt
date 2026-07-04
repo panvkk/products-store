@@ -2,6 +2,7 @@ package com.example.productsStore.testing.presentation.update
 
 import com.example.productsStore.core.domain.DomainError
 import com.example.productsStore.presentation.contract.ProductsListEvent
+import com.example.productsStore.presentation.contract.ProductsListItem
 import com.example.productsStore.presentation.contract.ProductsListNews
 import com.example.productsStore.presentation.contract.ProductsListState
 import com.example.productsStore.presentation.model.ProductUiModel
@@ -21,11 +22,13 @@ internal class ProductsListUpdateTest {
         error = null
     )
     private val testProducts = listOf(
-        ProductUiModel(
-            id = 1,
-            productTitle = "productTitle",
-            priceInUSD = 1f,
-            brand = ""
+        ProductsListItem(
+            ProductUiModel(
+                id = 1,
+                productTitle = "productTitle",
+                priceInUSD = 1f,
+                brand = ""
+            )
         )
     )
 
@@ -33,7 +36,7 @@ internal class ProductsListUpdateTest {
     fun `GIVEN success loading WHEN NextPageLoaded THEN state correctly updates`() {
         // GIVEN
         val expectedScreenState = initialState.copy(isLoadingGoing = false, productItems = testProducts)
-        val event = ProductsListEvent.Internal.NextPageLoaded(testProducts, false, null)
+        val event = ProductsListEvent.Internal.NextPageLoaded(testProducts.map { it.product }, false, null)
 
         // WHEN
         val actualState: ProductsListState? = createUpdate().update(initialState, event).state
