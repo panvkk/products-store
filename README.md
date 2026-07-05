@@ -1,8 +1,7 @@
 # Products Store (Из Т-Академии)
 
 Это приложение - классический пример онлайн магазина, с функционалом корзины, настройки уведомлений и просмотра деталей товаров. Для получения списка и деталей товаров используется API dummyjson.com.
-
-Релизный APK можно скачать здесь: [click](https://github.com/panvkk/products-store/blob/hw7/finishing-touches/app/release_apk/app-release.apk)
+[Релизный APK можно скачать здесь](https://github.com/panvkk/products-store/blob/hw7/finishing-touches/app/release_apk/app-release.apk)
 
 # 📸 Screenshots
 
