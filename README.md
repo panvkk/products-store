@@ -10,8 +10,9 @@
   <img width="250" alt="Details" src="https://github.com/user-attachments/assets/e661a403-44f0-4ba4-8bc0-88e37344e045" />
   <img width="250" alt="Cart" src="https://github.com/user-attachments/assets/dc09ac74-80ed-4739-84e9-95dddcc76371" />
   <img width="250" alt="Cart hint" src="https://github.com/user-attachments/assets/1a1c092c-ed73-4c05-93f3-7838171f08ea" />
-  <img width="250" alt="products-store" src="https://github.com/user-attachments/assets/69a8c8b4-6bad-4eb6-8e9f-9d5caa0194c1" />
 </p>
+
+**[Видео работы приложения](https://github.com/user-attachments/assets/18952b45-abcd-4cd2-8d05-85f315b6fb3e)**
 
 # 🛠 Tech Stack
 
