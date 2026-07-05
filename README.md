@@ -5,14 +5,14 @@
 
 # 📸 Screenshots
 
+**[Видео работы приложения](https://github.com/user-attachments/assets/18952b45-abcd-4cd2-8d05-85f315b6fb3e)**
+
 <p align="center">
   <img width="250" alt="Main List" src="https://github.com/user-attachments/assets/033abbdc-8c6f-41f7-a3e9-74c16491213d" />
   <img width="250" alt="Details" src="https://github.com/user-attachments/assets/e661a403-44f0-4ba4-8bc0-88e37344e045" />
   <img width="250" alt="Cart" src="https://github.com/user-attachments/assets/dc09ac74-80ed-4739-84e9-95dddcc76371" />
   <img width="250" alt="Cart hint" src="https://github.com/user-attachments/assets/1a1c092c-ed73-4c05-93f3-7838171f08ea" />
 </p>
-
-**[Видео работы приложения](https://github.com/user-attachments/assets/18952b45-abcd-4cd2-8d05-85f315b6fb3e)**
 
 # 🛠 Tech Stack
 
