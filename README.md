@@ -12,7 +12,7 @@
   <img width="250" alt="Cart" src="https://github.com/user-attachments/assets/dc09ac74-80ed-4739-84e9-95dddcc76371" />
 </p>
 
-[Видео работы приложения](https://github.com/user-attachments/assets/cb0283e1-94d1-426f-b472-87ca0c042542)
+[Видео работы приложения](https://github.com/user-attachments/assets/41cba941-f01e-459b-85f8-90c291d89b41)
 
 # 🛠 Tech Stack
 
