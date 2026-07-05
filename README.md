@@ -4,8 +4,6 @@
 
 [Релизный APK можно скачать здесь](https://github.com/panvkk/products-store/blob/hw7/finishing-touches/app/release_apk/app-release.apk)
 
-**[Видео работы приложения](https://github.com/user-attachments/assets/18952b45-abcd-4cd2-8d05-85f315b6fb3e)**
-
 # 📸 Screenshots
 
 <p align="center">
@@ -13,6 +11,8 @@
   <img width="250" alt="Details" src="https://github.com/user-attachments/assets/e661a403-44f0-4ba4-8bc0-88e37344e045" />
   <img width="250" alt="Cart" src="https://github.com/user-attachments/assets/dc09ac74-80ed-4739-84e9-95dddcc76371" />
 </p>
+
+[Видео работы приложения](https://github.com/user-attachments/assets/18952b45-abcd-4cd2-8d05-85f315b6fb3e)
 
 # 🛠 Tech Stack
 
