@@ -17,7 +17,7 @@
 
 **UI**: Jetpack Compose (декларативный интерфейс).
 
-**Architecture**: Clean Architecture + The Elm Architecture for UI (В качестве библиотеки [https://github.com/tinkoff-mobile-tech/KoTEA](KoTEA) ).
+**Architecture**: Clean Architecture + The Elm Architecture for UI (В качестве библиотеки [KoTEA](https://github.com/tinkoff-mobile-tech/KoTEA) ).
 
 **DI**: Hilt.
 
